@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAE-DINA | Monitor de Avaliação de Entrada e Margem Alvo</title>
+    <style>
+        :root {
+            --primary: #04101e;
+            --primary-light: #061728;
+            --accent: #2563eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
+            --bg-showroom: #e0f2fe;
+            --text-showroom: #0369a1;
+            --bg-repasse: #ffedd5;
+            --text-repasse: #c2410c;
+            --border: #cbd5e1;
+            --text: #334155;
+        }
+
+        * {
+            box-shadow: none;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #04101e 0%, #061728 60%, #020c14 100%);
+            color: var(--text);
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            padding: 24px;
+            border-top: 6px solid var(--primary);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .logo-title h1 {
+            font-size: 26px;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-title p {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .date-badge {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .inputs-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .inputs-grid { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .input-group.highlight-buy {
+            background: #f0f4ff;
+            border: 2px solid var(--accent);
+        }
+
+        .input-group.showroom-group { border-left: 4px solid var(--text-showroom); }
+        .input-group.repasse-group { border-left: 4px solid var(--text-repasse); }
+
+        .input-group label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .input-group .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group .prefix {
+            position: absolute;
+            left: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px 8px 8px 35px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-group input::placeholder {
+            color: #b2bec3;
+            opacity: 0.35;
+            font-weight: 400;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .medias-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 640px) {
+            .medias-container { grid-template-columns: 1fr; }
+        }
+
+        .media-card {
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .media-card.showroom { background-color: var(--bg-showroom); color: var(--text-showroom); }
+        .media-card.repasse { background-color: var(--bg-repasse); color: var(--text-repasse); }
+
+        .media-card .label { font-weight: 700; font-size: 13px; text-transform: uppercase; }
+        .media-card .value { font-size: 22px; font-weight: 800; }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            padding: 14px 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        tr:hover td { background-color: #f8fafc; }
+
+        .col-days { font-weight: 700; color: var(--primary); }
+        .col-date { color: #64748b; }
+
+        .profit-positive { color: var(--success-text); }
+        .profit-negative { color: var(--danger-text); background-color: var(--danger-bg); border-radius: 4px; padding: 2px 6px; }
+
+        .deadlines-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .deadlines-section { grid-template-columns: 1fr; }
+        }
+
+        .deadline-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            background: #f8fafc;
+        }
+
+        .deadline-card.showroom-alert { border-top: 4px solid var(--text-showroom); }
+        .deadline-card.repasse-alert { border-top: 4px solid var(--text-repasse); }
+
+        .deadline-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .deadline-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 13px;
+        }
+
+        .deadline-item:last-child { border-bottom: none; }
+        .deadline-item .title { font-weight: 500; color: #475569; }
+        .deadline-item .value-date { font-weight: 700; color: var(--primary); }
+
+        .status-pill {
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-ideal { background-color: var(--success-bg); color: var(--success-text); }
+
+        footer {
+            margin-top: 32px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+        .signature {
+            font-style: italic;
+            font-weight: 600;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-title">
+            <h1>MAE-DINA</h1>
+            <p>Monitor de Avaliação de Entrada e Margem Alvo • Sistema Integrado Flex</p>
+        </div>
+        <div class="date-badge" id="current-date-badge">Data de Abertura: --/--/----</div>
+    </header>
+
+    <section class="inputs-grid">
+        <div class="input-group highlight-buy">
+            <label>1. Avaliação (Compra)</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-avaliacao" placeholder="Ex: 85000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group">
+            <label>2. Tabela FIPE</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-fipe" placeholder="Ex: 100000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group showroom-group">
+            <label>3. AutoAvaliar B2C</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-aav-b2c" placeholder="Ex: 98000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group showroom-group">
+            <label>4. KBB Preço de Loja</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-kbb-loja" placeholder="Ex: 97000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group showroom-group">
+            <label>5. SM Showroom (Alvo)</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-sm-showroom" placeholder="Ex: 102000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group repasse-group">
+            <label>6. KBB Repasse</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-kbb-repasse" placeholder="Ex: 89000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group repasse-group">
+            <label>7. AAV Repasse</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-aav-repasse" placeholder="Ex: 88000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+        <div class="input-group repasse-group">
+            <label>8. SM Repasse (Alvo)</label>
+            <div class="input-wrapper">
+                <span class="prefix">R$</span>
+                <input type="text" id="inp-sm-repasse" placeholder="Ex: 90000" oninput="reformatarCampo(this)">
+            </div>
+        </div>
+    </section>
+
+    <section class="medias-container">
+        <div class="media-card showroom">
+            <span class="label">Média Ponderada Showroom</span>
+            <span class="value" id="out-media-showroom">R$ 0</span>
+        </div>
+        <div class="media-card repasse">
+            <span class="label">Média Ponderada Repasse</span>
+            <span class="value" id="out-media-repasse">R$ 0</span>
+        </div>
+    </section>
+
+    <section class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Prazo</th>
+                    <th>Data Alvo</th>
+                    <th>Custo de Carregamento</th>
+                    <th>Margem Est. Showroom</th>
+                    <th>Margem Est. Repasse</th>
+                </tr>
+            </thead>
+            <tbody id="table-scenarios-body">
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Aguardando o preenchimento dos valores acima...</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="deadlines-section">
+        <div class="deadline-card showroom-alert">
+            <h3 style="color: var(--text-showroom)">⚠️ Deadlines - Canal Showroom</h3>
+            <div class="deadline-item">
+                <span class="title">Margem de Operação Ideal (Até 30 dias)</span>
+                <span class="status-pill status-ideal">Seguro</span>
+            </div>
+            <div class="deadline-item">
+                <span class="title">Data Limite Alvo Projetado</span>
+                <span class="value-date" id="dead-showroom-limite">--/--/----</span>
+            </div>
+            <div class="deadline-item">
+                <span class="title">Ponto de Inversão (Margem Zera)</span>
+                <span class="value-date" id="dead-showroom-zero" style="color: var(--danger-text)">--/--/----</span>
+            </div>
+        </div>
+
+        <div class="deadline-card repasse-alert">
+            <h3 style="color: var(--text-repasse)">⚠️ Deadlines - Canal Repasse</h3>
+            <div class="deadline-item">
+                <span class="title">Margem de Operação Ideal (Até 15 dias)</span>
+                <span class="status-pill status-ideal">Seguro</span>
+            </div>
+            <div class="deadline-item">
+                <span class="title">Data Limite Alvo Projetado</span>
+                <span class="value-date" id="dead-repasse-limite">--/--/----</span>
+            </div>
+            <div class="deadline-item">
+                <span class="title">Ponto de Inversão (Margem Zera)</span>
+                <span class="value-date" id="dead-repasse-zero" style="color: var(--danger-text)">--/--/----</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div>Módulo MAE-DINA v2.0 • Proteção Ativa de Margem Líquida</div>
+        <div class="signature" id="footer-signature">Elaborado Por Edson Jaques - --/--/----</div>
+    </footer>
+</div>
+
+<script>
+    const CUSTO_KIT_RAFAEL = 1200; // R$ 1.200 em valor cheio para bater com a digitação direta
+    const TAXA_JUROS_MENSAL = 0.015; 
+    const DEPRECIACAO_DIARIA_MARKET = 0.0006; 
+
+    const dataAbertura = new Date(); 
+
+    document.addEventListener("DOMContentLoaded", function() {
+        formatarDataCabecalho();
+    });
+
+    function formatarDataCabecalho() {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const dataFormatada = dataAbertura.toLocaleDateString('pt-BR', options);
+        document.getElementById("current-date-badge").innerText = "Data de Abertura: " + dataFormatada;
+        document.getElementById("footer-signature").innerText = "Elaborado Por Edson Jaques - " + dataFormatada;
+    }
+
+    // Função que aplica a máscara visual e dispara o cálculo automaticamente
+    function reformatarCampo(el) {
+        let raw = el.value.replace(/\D/g, ""); // Remove tudo que não for número
+        if (raw) {
+            el.value = Number(raw).toLocaleString("pt-BR");
+        } else {
+            el.value = "";
+        }
+        calcularSimulador();
+    }
+
+    function converterValor(id) {
+        const valStr = document.getElementById(id).value.replace(/\D/g, "");
+        return parseFloat(valStr) || 0;
+    }
+
+    function somarDias(data, dias) {
+        let resultado = new Date(data);
+        resultado.setDate(resultado.getDate() + dias);
+        return resultado;
+    }
+
+    // Formato padrão solicitado: R$ 100.000 (Sem centavos)
+    function formatarMoeda(valor) {
+        if (isNaN(valor) || valor <= 0) return "R$ 0";
+        return "R$ " + Math.round(valor).toLocaleString('pt-BR');
+    }
+    
+    function formatarMoedaMargem(valor) {
+        if (isNaN(valor) || valor === 0) return "R$ 0";
+        const sinal = valor < 0 ? "-" : "";
+        return sinal + "R$ " + Math.abs(Math.round(valor)).toLocaleString('pt-BR');
+    }
+
+    function calcularSimulador() {
+        const avaliacao = converterValor("inp-avaliacao");
+        const fipe = converterValor("inp-fipe");
+        const aavB2c = converterValor("inp-aav-b2c");
+        const kbbLoja = converterValor("inp-kbb-loja");
+        const smShowroom = converterValor("inp-sm-showroom");
+
+        const kbbRepasse = converterValor("inp-kbb-repasse");
+        const aavRepasse = converterValor("inp-aav-repasse");
+        const smRepasse = converterValor("inp-sm-repasse");
+
+        if (avaliacao === 0) {
+            document.getElementById("out-media-showroom").innerText = "R$ 0";
+            document.getElementById("out-media-repasse").innerText = "R$ 0";
+            document.getElementById("table-scenarios-body").innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Aguardando o preenchimento dos valores acima...</td></tr>`;
+            return;
+        }
+
+        // Médias Ponderadas de Balizamento
+        const mediaShowroom = (fipe + aavB2c + kbbLoja + smShowroom) / 4;
+        const mediaRepasse = (kbbRepasse + aavRepasse + smRepasse) / 3;
+
+        document.getElementById("out-media-showroom").innerText = formatarMoeda(mediaShowroom);
+        document.getElementById("out-media-repasse").innerText = formatarMoeda(mediaRepasse);
+
+        // Geração da Matriz de Cenários Temporais
+        const prazos = [15, 30, 45, 60, 75, 90];
+        const tbody = document.getElementById("table-scenarios-body");
+        tbody.innerHTML = "";
+
+        prazos.forEach(dias => {
+            const dataFutura = somarDias(dataAbertura, dias);
+            
+            const jurosAcumulados = avaliacao * (TAXA_JUROS_MENSAL * (dias / 30));
+            const custoTotalCarregamento = CUSTO_KIT_RAFAEL + jurosAcumulados;
+
+            const fatorDepreciacao = 1 - (DEPRECIACAO_DIARIA_MARKET * dias);
+            const precoVendaShowroomDepreciado = smShowroom * fatorDepreciacao;
+            const precoVendaRepasseDepreciado = smRepasse * fatorDepreciacao;
+
+            const margemShowroom = precoVendaShowroomDepreciado - (avaliacao + custoTotalCarregamento);
+            const margemRepasse = precoVendaRepasseDepreciado - (avaliacao + custoTotalCarregamento);
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td class="col-days">+${dias} dias</td>
+                <td class="col-date">${dataFutura.toLocaleDateString('pt-BR')}</td>
+                <td>${formatarMoeda(custoTotalCarregamento)}</td>
+                <td class="${margemShowroom >= 0 ? 'profit-positive' : 'profit-negative'}">${formatarMoedaMargem(margemShowroom)}</td>
+                <td class="${margemRepasse >= 0 ? 'profit-positive' : 'profit-negative'}">${formatarMoedaMargem(margemRepasse)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Cálculo exato de Deadlines (Margem = 0)
+        const numShowroom = smShowroom - avaliacao - CUSTO_KIT_RAFAEL;
+        const denShowroom = (smShowroom * DEPRECIACAO_DIARIA_MARKET) + (avaliacao * (TAXA_JUROS_MENSAL / 30));
+        let diasAteZeroShowroom = denShowroom > 0 ? Math.floor(numShowroom / denShowroom) : 0;
+        if(diasAteZeroShowroom < 0) diasAteZeroShowroom = 0;
+
+        const numRepasse = smRepasse - avaliacao - CUSTO_KIT_RAFAEL;
+        const denRepasse = (smRepasse * DEPRECIACAO_DIARIA_MARKET) + (avaliacao * (TAXA_JUROS_MENSAL / 30));
+        let diasAteZeroRepasse = denRepasse > 0 ? Math.floor(numRepasse / denRepasse) : 0;
+        if(diasAteZeroRepasse < 0) diasAteZeroRepasse = 0;
+
+        const dataLimiteShowroom = somarDias(dataAbertura, Math.min(30, diasAteZeroShowroom));
+        const dataZeroShowroom = somarDias(dataAbertura, diasAteZeroShowroom);
+
+        const dataLimiteRepasse = somarDias(dataAbertura, Math.min(15, diasAteZeroRepasse));
+        const dataZeroRepasse = somarDias(dataAbertura, diasAteZeroRepasse);
+
+        document.getElementById("dead-showroom-limite").innerText = dataLimiteShowroom.toLocaleDateString('pt-BR') + ` (${Math.min(30, diasAteZeroShowroom)} dias)`;
+        document.getElementById("dead-showroom-zero").innerText = dataZeroShowroom.toLocaleDateString('pt-BR') + ` (${diasAteZeroShowroom} dias)`;
+
+        document.getElementById("dead-repasse-limite").innerText = dataLimiteRepasse.toLocaleDateString('pt-BR') + ` (${Math.min(15, diasAteZeroRepasse)} dias)`;
+        document.getElementById("dead-repasse-zero").innerText = dataZeroRepasse.toLocaleDateString('pt-BR') + ` (${diasAteZeroRepasse} dias)`;
+    }
+</script>
+
+</body>
+</html>
