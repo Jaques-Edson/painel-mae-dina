@@ -153,7 +153,7 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 .cmp td.pos{color:#22d47e!important;}
 
 /* CARDS */
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:7px;}
 .card{
   border:1px solid rgba(255,255,255,.09);border-radius:9px;
   background:rgba(8,22,42,.8);padding:14px 14px;
@@ -369,11 +369,13 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 .exp-logo img{height:100%;object-fit:contain;}
 .exp-title{font-size:28px;font-weight:950;color:#f0f4ff;letter-spacing:-.8px;}
 .exp-sub{font-size:13px;color:#7a9ab8;margin-top:4px;}
-.exp-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0;}
+.exp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:12px 0;}
 .exp-legal{padding:9px 12px;display:flex;gap:8px;
   border:1px solid rgba(255,255,255,.08);border-radius:10px;
   background:rgba(13,39,68,.4);color:#8fa8c0;font-size:11px;line-height:1.4;}
 .exp-credito{text-align:right;font-size:9px;color:rgba(122,154,184,.6);margin-top:6px;}
+
+.admin-hidden{display:none!important;}
 </style>
 </head>
 <body>
@@ -468,33 +470,22 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 
     <!-- BLOCO 4: EXPECTATIVA DO GESTOR -->
     <div class="blk ciano-blk">
-      <div class="blk-title" style="text-align:center;font-size:13px;color:#25d7f3;">Expectativa do Gestor (Venda)</div>
+      <div class="blk-title" style="text-align:center;font-size:13px;color:#25d7f3;">Preço de Venda Estimado</div>
       <div class="g2">
         <div class="field">
-          <label>SM Showroom (R$)</label>
+          <label>Showroom (R$)</label>
           <input id="smShowroom" type="text" inputmode="numeric" placeholder="Ex: 102.000">
         </div>
         <div class="field">
-          <label>SM Repasse (R$)</label>
+          <label>Repasse (R$)</label>
           <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
         </div>
       </div>
     </div>
+    <!-- PARÂMETROS INTERNOS DA COZINHA: ocultos para o avaliador -->
+    <input id="kitRafael" type="hidden" value="">
+    <input id="taxaJuros" type="hidden" value="">
 
-    <!-- BLOCO 5: CUSTOS OPERACIONAIS -->
-    <div class="blk">
-      <div class="blk-title">Custos Operacionais</div>
-      <div class="g2">
-        <div class="field">
-          <label>Kit Rafael (R$)</label>
-          <input id="kitRafael" type="text" inputmode="numeric" placeholder="Ex: 800">
-        </div>
-        <div class="field">
-          <label>Taxa de Juros (% a.m.)</label>
-          <input id="taxaJuros" type="text" inputmode="decimal" placeholder="Ex: 1,8">
-        </div>
-      </div>
-    </div>
 
     <!-- MÉDIAS CALCULADAS -->
     <div class="blk">
@@ -530,22 +521,7 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
       <div class="card">
         <div class="c-lbl">Custo Total Hoje</div>
         <div class="c-val" id="cardCustoHoje">—</div>
-        <div class="c-txt">Avaliação + Kit Rafael</div>
-      </div>
-      <div class="card yl">
-        <div class="c-lbl">Margem Ideal Showroom</div>
-        <div class="c-val" id="cardMargemIdealShow">—</div>
-        <div class="c-txt">SM Showroom − Custo Hoje</div>
-      </div>
-      <div class="card cy">
-        <div class="c-lbl">Margem Ideal Repasse</div>
-        <div class="c-val" id="cardMargemIdealRep">—</div>
-        <div class="c-txt">SM Repasse − Custo Hoje</div>
-      </div>
-      <div class="card gr">
-        <div class="c-lbl">Juros ao Dia</div>
-        <div class="c-val" id="cardJurosDia">—</div>
-        <div class="c-txt">Sobre o valor da Avaliação</div>
+        <div class="c-txt">Avaliação + custos internos</div>
       </div>
     </div>
 
@@ -592,11 +568,6 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
         </div>
       </div>
     </div>
-
-    <div class="nota">
-      <div class="ni">i</div>
-      <span>Simulação ilustrativa para apoio à decisão de compra e venda de veículos usados. As margens projetadas consideram depreciação por custo financeiro (juros simples sobre o valor da Avaliação) e o custo fixo do Kit Rafael. Sujeita a variações reais de mercado. Grupo San Marino.</span>
-    </div>
     <div class="credito" id="creditoLeft">Elaborado por Edson Jaques</div>
 
   </div>
@@ -626,10 +597,7 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
       </tbody>
     </table>
     <div class="exp-cards">
-      <div class="card"><div class="c-lbl">Custo Total Hoje</div><div class="c-val" id="ecCustoHoje">—</div><div class="c-txt">Avaliação + Kit Rafael</div></div>
-      <div class="card yl"><div class="c-lbl">Margem Ideal Showroom</div><div class="c-val" id="ecMargemIdealShow">—</div><div class="c-txt">SM Showroom − Custo Hoje</div></div>
-      <div class="card cy"><div class="c-lbl">Margem Ideal Repasse</div><div class="c-val" id="ecMargemIdealRep">—</div><div class="c-txt">SM Repasse − Custo Hoje</div></div>
-      <div class="card gr"><div class="c-lbl">Juros ao Dia</div><div class="c-val" id="ecJurosDia">—</div><div class="c-txt">Sobre o valor da Avaliação</div></div>
+      <div class="card"><div class="c-lbl">Custo Total Hoje</div><div class="c-val" id="ecCustoHoje">—</div><div class="c-txt">Avaliação + custos internos</div></div>
     </div>
     <div class="deadline-wrap" style="margin-bottom:10px;">
       <div class="deadline-blk show">
@@ -643,15 +611,22 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
         <div class="deadline-row"><span class="deadline-lbl">Margem zera</span><span class="deadline-val" id="eddlRepZero">—</span></div>
       </div>
     </div>
-    <div class="exp-legal">
-      <div class="ni">i</div>
-      <span>Simulação ilustrativa para apoio à decisão de compra e venda de veículos usados. Sujeita a variações reais de mercado. Grupo San Marino.</span>
-    </div>
     <div class="exp-credito" id="creditoExport">Elaborado por Edson Jaques</div>
   </div>
 </div>
 <script>
 const $=id=>document.getElementById(id);
+
+// Parâmetros oficiais Rev. 2 extraídos da planilha MAE-DINA.
+// Estes valores são internos da cozinha e não aparecem para o avaliador.
+const PARAMS = Object.freeze({
+  margemIdealShowroom: 0.06,
+  margemIdealRepasse: 0.025,
+  kitRafaelPct: 0.05,
+  taxaJurosAM: 0.017,
+  kitShowroomShare: 0.20,
+  kitRepasseShare: 0.16
+});
 
 /*
   ═══════════════════════════════════════════════════════════
@@ -750,8 +725,8 @@ function fileSafe(s){
 }
 
 function calc(){
-  // ── INPUTS ────────────────────────────────────────────────
-  const F2        = parseDateInput($("dataAbertura").value);  // Data de Abertura
+  // ── INPUTS VISÍVEIS ───────────────────────────────────────
+  const F2        = parseDateInput($("dataAbertura").value);
   const avaliacao = numVal("avaliacao");
   const fipe       = numVal("fipe");
   const aavB2C     = numVal("aavB2C");
@@ -760,8 +735,17 @@ function calc(){
   const kbbRepasse = numVal("kbbRepasse");
   const aavRepasse = numVal("aavRepasse");
   const smRepasse  = numVal("smRepasse");
-  const kitRafael  = numVal("kitRafael");
-  const taxaJuros  = decVal("taxaJuros"); // % a.m.
+
+  // ── PARÂMETROS INTERNOS REV. 2 ───────────────────────────
+  const kitPct       = PARAMS.kitRafaelPct;
+  const taxaJurosAM  = PARAMS.taxaJurosAM;
+  const kitShowShare = PARAMS.kitShowroomShare;
+  const kitRepShare  = PARAMS.kitRepasseShare;
+  const metaShowPct  = PARAMS.margemIdealShowroom;
+  const metaRepPct   = PARAMS.margemIdealRepasse;
+
+  const kitInternoTotal = avaliacao * kitPct;
+  const custoBase       = avaliacao + kitInternoTotal;
 
   // ── MÉDIAS DE MERCADO ────────────────────────────────────
   const temShowroomInputs = (fipe||aavB2C||kbbLoja||smShowroom);
@@ -772,45 +756,55 @@ function calc(){
   $("mediaShowroom").value = temShowroomInputs ? brR(mediaShowroom) : "";
   $("mediaRepasse").value  = temRepasseInputs ? brR(mediaRepasse) : "";
 
-  // ── VALIDAÇÃO MÍNIMA (trava) ────────────────────────────
+  // ── VALIDAÇÃO OPERACIONAL ────────────────────────────────
   const camposOk = avaliacao>0 && (temShowroomInputs || temRepasseInputs);
   const bar=$("sBar"), txt=$("sTxt"), ico=$("sIco");
   if(!avaliacao){
     bar.className="status"; txt.textContent="Preencha o valor da Avaliação"; ico.textContent="—";
   } else if(!temShowroomInputs && !temRepasseInputs){
     bar.className="status"; txt.textContent="Preencha ao menos os dados de Showroom ou Repasse"; ico.textContent="—";
-  } else if(taxaJuros<=0){
-    bar.className="status warn"; txt.textContent="⚠ Taxa de juros zerada — margens não depreciam no tempo"; ico.textContent="⚠️";
   } else {
-    bar.className="status ok"; txt.textContent="✓ Simulação calculada"; ico.textContent="✅";
+    const margemD0ShowPct = smShowroom>0 ? (smShowroom - avaliacao - kitInternoTotal) / smShowroom : null;
+    const margemD0RepPct  = smRepasse>0 ? (smRepasse - avaliacao) / smRepasse : null;
+    const showOk = margemD0ShowPct===null || margemD0ShowPct >= metaShowPct;
+    const repOk  = margemD0RepPct===null  || margemD0RepPct  >= metaRepPct;
+    if(showOk && repOk){
+      bar.className="status ok"; txt.textContent="✓ Simulação cobre as metas internas"; ico.textContent="✅";
+    } else {
+      bar.className="status bad"; txt.textContent="⚠ Simulação abaixo da meta interna"; ico.textContent="⚠️";
+    }
   }
 
   if(!camposOk){
-    // limpa tabela e cards se faltar o mínimo
     ["0","15","30","45","60","75","90"].forEach(p=>{
       setText("d-"+p,"—"); setMargemCell("ms-"+p,"—"); setMargemCell("mr-"+p,"—");
       setText("ed-"+p,"—"); setMargemCell("ems-"+p,"—"); setMargemCell("emr-"+p,"—");
     });
-    setText("cardCustoHoje","—"); setText("cardMargemIdealShow","—");
-    setText("cardMargemIdealRep","—"); setText("cardJurosDia","—");
+    setText("cardCustoHoje","—");
     setText("ddlShowIdeal","—"); setText("ddlShowZero","—");
     setText("ddlRepIdeal","—"); setText("ddlRepZero","—");
+    setText("ecCustoHoje","—");
+    setText("eddlShowIdeal","—"); setText("eddlShowZero","—");
+    setText("eddlRepIdeal","—"); setText("eddlRepZero","—");
     $("expSum").textContent="—";
     return;
   }
 
-  // ── CUSTOS E DEPRECIAÇÃO ─────────────────────────────────
-  const custoBase    = avaliacao + kitRafael;             // custo no Dia 0 (fixo)
-  const jurosDiarios  = avaliacao * (taxaJuros/100) / 30;   // R$ acumulados por dia (juros simples)
+  // Fórmulas Rev. 2, equivalentes à planilha:
+  // Showroom: média - avaliação - parte fixa do kit - depreciação/juros mensal proporcional aos dias.
+  // Repasse: média - avaliação - depreciação/juros mensal proporcional aos dias.
+  function margemShow(nDias){
+    return mediaShowroom
+      - avaliacao
+      - (avaliacao * (kitPct * (1-kitShowShare)))
+      - (avaliacao * ((kitPct * kitShowShare) + taxaJurosAM) * (nDias/30));
+  }
+  function margemRep(nDias){
+    return mediaRepasse
+      - avaliacao
+      - (avaliacao * ((kitPct * kitRepShare) + taxaJurosAM) * (nDias/30));
+  }
 
-  function custoTotal(n){ return custoBase + jurosDiarios*n; }
-  function margemShow(n){ return mediaShowroom - custoTotal(n); }
-  function margemRep(n){  return mediaRepasse  - custoTotal(n); }
-
-  const margemIdealShow = smShowroom - custoBase;
-  const margemIdealRep  = smRepasse  - custoBase;
-
-  // ── TABELA DE PROJEÇÃO TEMPORAL ──────────────────────────
   const periodos = [0,15,30,45,60,75,90];
   periodos.forEach(p=>{
     const data = addDays(F2,p);
@@ -830,78 +824,48 @@ function calc(){
     }
   });
 
-  // ── CARDS DE RESUMO ───────────────────────────────────────
   setText("cardCustoHoje", brR(custoBase));
-  setText("cardMargemIdealShow", temShowroomInputs ? brR(margemIdealShow) : "—");
-  setText("cardMargemIdealRep", temRepasseInputs ? brR(margemIdealRep) : "—");
-  setText("cardJurosDia", brR(jurosDiarios) + "/dia");
   setText("ecCustoHoje", brR(custoBase));
-  setText("ecMargemIdealShow", temShowroomInputs ? brR(margemIdealShow) : "—");
-  setText("ecMargemIdealRep", temRepasseInputs ? brR(margemIdealRep) : "—");
-  setText("ecJurosDia", brR(jurosDiarios) + "/dia");
 
-  // ── DEADLINES ──────────────────────────────────────────────
-  // Função genérica: dado mediaMercado e margemIdeal, calcula:
-  //  - diasLimiteIdeal: último dia inteiro em que margem(N) >= margemIdeal
-  //  - diasZero: primeiro dia (fracionário) em que margem(N) <= 0
-  function calcularDeadlines(mediaMercado, margemIdealRef){
-    const resultado = {limiteTxt:"—", limiteCls:"muted", zeroTxt:"—", zeroCls:"muted"};
-    if(jurosDiarios <= 0){
-      // sem depreciação por juros: margem é constante = mediaMercado - custoBase
-      const margemConstante = mediaMercado - custoBase;
-      resultado.limiteTxt = margemConstante >= margemIdealRef ? "Sem prazo (mantém-se)" : "Já abaixo do ideal";
-      resultado.limiteCls = margemConstante >= margemIdealRef ? "ok" : "bad";
-      resultado.zeroTxt = margemConstante > 0 ? "Não zera (sem juros)" : "Já em prejuízo";
-      resultado.zeroCls = margemConstante > 0 ? "ok" : "bad";
-      return resultado;
-    }
-    // margem(N) = mediaMercado - custoBase - jurosDiarios*N  → decrescente em N
-    // margem(N) >= margemIdealRef  →  N <= (mediaMercado - custoBase - margemIdealRef) / jurosDiarios
-    const nLimite = (mediaMercado - custoBase - margemIdealRef) / jurosDiarios;
-    if(nLimite < 0){
-      resultado.limiteTxt = "Já abaixo do ideal hoje";
-      resultado.limiteCls = "bad";
-    } else {
-      const diaLimite = Math.floor(nLimite);
-      resultado.limiteTxt = fmtData(addDays(F2,diaLimite)) + ` (+${diaLimite}d)`;
-      resultado.limiteCls = "ok";
-    }
-    // margem(N) <= 0  →  N >= (mediaMercado - custoBase) / jurosDiarios
-    const nZero = (mediaMercado - custoBase) / jurosDiarios;
-    if(nZero < 0){
-      resultado.zeroTxt = "Já em prejuízo hoje";
-      resultado.zeroCls = "bad";
-    } else {
-      const diaZero = Math.ceil(nZero);
-      resultado.zeroTxt = fmtData(addDays(F2,diaZero)) + ` (+${diaZero}d)`;
-      resultado.zeroCls = diaZero<=90 ? "bad" : "muted";
-    }
-    return resultado;
+  function classDeadline(dias, tipo){
+    if(dias < 0) return "bad";
+    if(tipo==="zero" && dias<=90) return "bad";
+    return "ok";
+  }
+  function deadlineTxt(dias, tipo){
+    if(!isFinite(dias)) return "—";
+    if(dias < 0) return tipo==="zero" ? "Já em prejuízo hoje" : "Já abaixo do ideal hoje";
+    const d = tipo==="zero" ? Math.ceil(dias) : Math.floor(dias);
+    return fmtData(addDays(F2,d)) + ` (+${d}d)`;
   }
 
+  const dailyShow = ((avaliacao * taxaJurosAM) + (avaliacao * (kitPct * kitShowShare))) / 30;
+  const dailyRep  = ((avaliacao * taxaJurosAM) + (avaliacao * (kitPct * kitRepShare))) / 30;
+
   if(temShowroomInputs){
-    const r = calcularDeadlines(mediaShowroom, margemIdealShow);
-    setText("ddlShowIdeal", r.limiteTxt); $("ddlShowIdeal").className="deadline-val "+r.limiteCls;
-    setText("ddlShowZero", r.zeroTxt);   $("ddlShowZero").className="deadline-val "+r.zeroCls;
-    setText("eddlShowIdeal", r.limiteTxt);
-    setText("eddlShowZero", r.zeroTxt);
+    const diasIdeal = (mediaShowroom - avaliacao - (avaliacao * (kitPct * (1-kitShowShare))) - (metaShowPct * mediaShowroom)) / dailyShow;
+    const diasZero  = (mediaShowroom - avaliacao - (avaliacao * (kitPct * (1-kitShowShare)))) / dailyShow;
+    setText("ddlShowIdeal", deadlineTxt(diasIdeal,"ideal")); $("ddlShowIdeal").className="deadline-val "+classDeadline(diasIdeal,"ideal");
+    setText("ddlShowZero", deadlineTxt(diasZero,"zero"));   $("ddlShowZero").className="deadline-val "+classDeadline(diasZero,"zero");
+    setText("eddlShowIdeal", deadlineTxt(diasIdeal,"ideal"));
+    setText("eddlShowZero", deadlineTxt(diasZero,"zero"));
   } else {
     setText("ddlShowIdeal","—"); setText("ddlShowZero","—");
     setText("eddlShowIdeal","—"); setText("eddlShowZero","—");
   }
 
   if(temRepasseInputs){
-    const r = calcularDeadlines(mediaRepasse, margemIdealRep);
-    setText("ddlRepIdeal", r.limiteTxt); $("ddlRepIdeal").className="deadline-val "+r.limiteCls;
-    setText("ddlRepZero", r.zeroTxt);   $("ddlRepZero").className="deadline-val "+r.zeroCls;
-    setText("eddlRepIdeal", r.limiteTxt);
-    setText("eddlRepZero", r.zeroTxt);
+    const diasIdeal = (mediaRepasse - avaliacao - (metaRepPct * mediaRepasse)) / dailyRep;
+    const diasZero  = (mediaRepasse - avaliacao) / dailyRep;
+    setText("ddlRepIdeal", deadlineTxt(diasIdeal,"ideal")); $("ddlRepIdeal").className="deadline-val "+classDeadline(diasIdeal,"ideal");
+    setText("ddlRepZero", deadlineTxt(diasZero,"zero"));   $("ddlRepZero").className="deadline-val "+classDeadline(diasZero,"zero");
+    setText("eddlRepIdeal", deadlineTxt(diasIdeal,"ideal"));
+    setText("eddlRepZero", deadlineTxt(diasZero,"zero"));
   } else {
     setText("ddlRepIdeal","—"); setText("ddlRepZero","—");
     setText("eddlRepIdeal","—"); setText("eddlRepZero","—");
   }
 
-  // ── EXPORT SUMMARY ────────────────────────────────────────
   const modeloTxt = $("modelo").value || "Veículo";
   $("expSum").textContent = `${modeloTxt} | Avaliação ${brR(avaliacao)} | Abertura ${fmtData(F2)}`;
 }
