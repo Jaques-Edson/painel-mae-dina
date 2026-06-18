@@ -617,7 +617,7 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 <script>
 const $=id=>document.getElementById(id);
 
-// Parâmetros oficiais Rev. 2 extraídos da planilha MAE-DINA.
+// Parâmetros oficiais Rev. 3 extraídos da planilha MAE-DINA.
 // Estes valores são internos da cozinha e não aparecem para o avaliador.
 const PARAMS = Object.freeze({
   margemIdealShowroom: 0.06,
@@ -663,6 +663,11 @@ const PARAMS = Object.freeze({
   MARGEM IDEAL (referência fixa, calculada no Dia 0, usando a expectativa do gestor):
     margemIdealShowroom = smShowroom - custoBase
     margemIdealRepasse  = smRepasse  - custoBase
+
+  VALIDAÇÃO OPERACIONAL (Rev. 3 — Margem Líquida % sobre a Média de Mercado):
+    margemD0ShowPct = (mediaShowroom - avaliacao) / mediaShowroom
+    margemD0RepPct  = (mediaRepasse  - avaliacao) / mediaRepasse
+    Status "✓ cobre as metas" quando margemD0ShowPct >= metaShowPct E margemD0RepPct >= metaRepPct.
 
   DEADLINES:
     "Data limite para garantir a margem ideal":
@@ -736,7 +741,7 @@ function calc(){
   const aavRepasse = numVal("aavRepasse");
   const smRepasse  = numVal("smRepasse");
 
-  // ── PARÂMETROS INTERNOS REV. 2 ───────────────────────────
+  // ── PARÂMETROS INTERNOS REV. 3 ───────────────────────────
   const kitPct       = PARAMS.kitRafaelPct;
   const taxaJurosAM  = PARAMS.taxaJurosAM;
   const kitShowShare = PARAMS.kitShowroomShare;
@@ -764,8 +769,8 @@ function calc(){
   } else if(!temShowroomInputs && !temRepasseInputs){
     bar.className="status"; txt.textContent="Preencha ao menos os dados de Showroom ou Repasse"; ico.textContent="—";
   } else {
-    const margemD0ShowPct = smShowroom>0 ? (smShowroom - avaliacao - kitInternoTotal) / smShowroom : null;
-    const margemD0RepPct  = smRepasse>0 ? (smRepasse - avaliacao) / smRepasse : null;
+    const margemD0ShowPct = temShowroomInputs && mediaShowroom>0 ? (mediaShowroom - avaliacao) / mediaShowroom : null;
+    const margemD0RepPct  = temRepasseInputs  && mediaRepasse>0  ? (mediaRepasse  - avaliacao) / mediaRepasse  : null;
     const showOk = margemD0ShowPct===null || margemD0ShowPct >= metaShowPct;
     const repOk  = margemD0RepPct===null  || margemD0RepPct  >= metaRepPct;
     if(showOk && repOk){
@@ -790,7 +795,7 @@ function calc(){
     return;
   }
 
-  // Fórmulas Rev. 2, equivalentes à planilha:
+  // Fórmulas Rev. 3, equivalentes à planilha:
   // Showroom: média - avaliação - parte fixa do kit - depreciação/juros mensal proporcional aos dias.
   // Repasse: média - avaliação - depreciação/juros mensal proporcional aos dias.
   function margemShow(nDias){
