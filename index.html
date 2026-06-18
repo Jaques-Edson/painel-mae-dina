@@ -256,20 +256,39 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 @media (max-width:960px){
   body{overflow-y:auto;height:auto;min-height:100vh;}
   .body{grid-template-columns:1fr;overflow:visible;}
-  .left{border-right:0;border-bottom:1px solid rgba(255,255,255,.08);overflow-y:visible;}
-  .right{overflow-y:visible;}
-  .blk{padding:10px 10px;}
+  .left{
+    border-right:0;border-bottom:0;
+    overflow-y:visible;
+    padding:8px 10px;
+    gap:6px;
+  }
+  .right{overflow-y:visible;padding:8px 10px;gap:8px;}
+  .blk{padding:8px 10px;}
+  .blk-title{margin-bottom:6px;}
   input[type="text"],input[type="number"],input[type="date"],select{height:38px;font-size:13px;}
   .deadline-wrap{grid-template-columns:1fr;}
   .cards{grid-template-columns:repeat(2,1fr);}
   .cmp{font-size:10px;}
   .cmp td,.cmp th{padding:6px 4px;}
+  /* Status bar compacto */
+  .status{padding:7px 10px;}
+  /* Data abertura mais compacta */
+  .data-row{padding:5px 10px;margin-bottom:0;}
+  /* Botão menor no mobile */
+  .btn{height:40px;font-size:13px;}
 }
 @media (max-width:500px){
   .g2{gap:6px;}
+  .g2.g2-inline{grid-template-columns:1fr 1fr!important;gap:6px;}
   .g3{gap:4px;}
   .field label{font-size:8px;line-height:1.15;}
   .ro{font-size:11px!important;padding:0 4px!important;}
+  .blk{padding:7px 8px;}
+  .left{gap:5px;padding:6px 8px;}
+  .right{padding:6px 8px;gap:6px;}
+  .deadline-blk{padding:10px 12px;}
+  .cards{gap:5px;}
+  .card{padding:10px 10px;}
 }
 
 
@@ -365,8 +384,8 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 .exp-sheet{border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;
   background:rgba(8,22,42,.99);}
 .exp-top{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center;margin-bottom:14px;}
-.exp-logo{height:52px;display:flex;align-items:center;}
-.exp-logo img{height:100%;object-fit:contain;}
+.exp-logo{height:52px;width:200px;display:flex;align-items:center;overflow:hidden;flex-shrink:0;}
+.exp-logo img{height:100%;max-width:100%;object-fit:contain;display:block;}
 .exp-title{font-size:28px;font-weight:950;color:#f0f4ff;letter-spacing:-.8px;}
 .exp-sub{font-size:13px;color:#7a9ab8;margin-top:4px;}
 .exp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:12px 0;}
@@ -439,7 +458,28 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
       </div>
     </div>
 
-    <!-- BLOCO 3: REFERÊNCIAS DE MERCADO -->
+    <!-- BLOCO 3: PREÇO DE VENDA ESTIMADO (logo abaixo da avaliação) -->
+    <div class="blk ciano-blk">
+      <div class="blk-title" style="text-align:center;font-size:13px;color:#25d7f3;">Preço de Venda Estimado</div>
+      <div class="g2 g2-inline">
+        <div class="field">
+          <label>Showroom (R$)</label>
+          <input id="smShowroom" type="text" inputmode="numeric" placeholder="Ex: 102.000">
+        </div>
+        <div class="field">
+          <label>Repasse (R$)</label>
+          <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
+        </div>
+      </div>
+    </div>
+
+    <!-- STATUS (logo abaixo do preço de venda) -->
+    <div class="status" id="sBar">
+      <div class="status-txt" id="sTxt">Preencha os campos de avaliação</div>
+      <span id="sIco">—</span>
+    </div>
+
+    <!-- BLOCO 4: REFERÊNCIAS DE MERCADO -->
     <div class="blk">
       <div class="blk-title">Referências de Mercado</div>
       <div class="g2" style="margin-bottom:8px;">
@@ -468,25 +508,6 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
       </div>
     </div>
 
-    <!-- BLOCO 4: EXPECTATIVA DO GESTOR -->
-    <div class="blk ciano-blk">
-      <div class="blk-title" style="text-align:center;font-size:13px;color:#25d7f3;">Preço de Venda Estimado</div>
-      <div class="g2">
-        <div class="field">
-          <label>Showroom (R$)</label>
-          <input id="smShowroom" type="text" inputmode="numeric" placeholder="Ex: 102.000">
-        </div>
-        <div class="field">
-          <label>Repasse (R$)</label>
-          <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
-        </div>
-      </div>
-    </div>
-    <!-- PARÂMETROS INTERNOS DA COZINHA: ocultos para o avaliador -->
-    <input id="kitRafael" type="hidden" value="">
-    <input id="taxaJuros" type="hidden" value="">
-
-
     <!-- MÉDIAS CALCULADAS -->
     <div class="blk">
       <div class="blk-title">Médias Ponderadas de Mercado</div>
@@ -502,11 +523,9 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
       </div>
     </div>
 
-    <!-- STATUS -->
-    <div class="status" id="sBar">
-      <div class="status-txt" id="sTxt">Preencha os campos de avaliação</div>
-      <span id="sIco">—</span>
-    </div>
+    <!-- PARÂMETROS INTERNOS DA COZINHA: ocultos para o avaliador -->
+    <input id="kitRafael" type="hidden" value="">
+    <input id="taxaJuros" type="hidden" value="">
 
     <!-- BOTÃO DOWNLOAD -->
     <button class="btn" id="dlBtn">⬇ Baixar imagem</button>
@@ -753,13 +772,34 @@ function calc(){
   const custoBase       = avaliacao + kitInternoTotal;
 
   // ── MÉDIAS DE MERCADO ────────────────────────────────────
-  const temShowroomInputs = (fipe||aavB2C||kbbLoja||smShowroom);
-  const temRepasseInputs  = (kbbRepasse||aavRepasse||smRepasse);
-  const mediaShowroom = (fipe + aavB2C + kbbLoja + smShowroom) / 4;
-  const mediaRepasse  = (kbbRepasse + aavRepasse + smRepasse) / 3;
+  // Referências externas (FIPE, AAV, KBB)
+  const temRefShowroom = (fipe||aavB2C||kbbLoja);
+  const temRefRepasse  = (kbbRepasse||aavRepasse);
+  const temShowroomInputs = (temRefShowroom||smShowroom);
+  const temRepasseInputs  = (temRefRepasse||smRepasse);
+
+  // Se referências de mercado estiverem vazias, o preço estimado do gestor
+  // (smShowroom / smRepasse) assume sozinho como média — sem quebrar o cálculo.
+  let mediaShowroom, mediaRepasse;
+  if(temRefShowroom && smShowroom){
+    mediaShowroom = (fipe + aavB2C + kbbLoja + smShowroom) / 4;
+  } else if(temRefShowroom){
+    const cntS = (fipe?1:0)+(aavB2C?1:0)+(kbbLoja?1:0);
+    mediaShowroom = cntS>0 ? (fipe+aavB2C+kbbLoja)/cntS : 0;
+  } else {
+    mediaShowroom = smShowroom||0;
+  }
+  if(temRefRepasse && smRepasse){
+    mediaRepasse = (kbbRepasse + aavRepasse + smRepasse) / 3;
+  } else if(temRefRepasse){
+    const cntR = (kbbRepasse?1:0)+(aavRepasse?1:0);
+    mediaRepasse = cntR>0 ? (kbbRepasse+aavRepasse)/cntR : 0;
+  } else {
+    mediaRepasse = smRepasse||0;
+  }
 
   $("mediaShowroom").value = temShowroomInputs ? brR(mediaShowroom) : "";
-  $("mediaRepasse").value  = temRepasseInputs ? brR(mediaRepasse) : "";
+  $("mediaRepasse").value  = temRepasseInputs  ? brR(mediaRepasse)  : "";
 
   // ── VALIDAÇÃO OPERACIONAL ────────────────────────────────
   const camposOk = avaliacao>0 && (temShowroomInputs || temRepasseInputs);
