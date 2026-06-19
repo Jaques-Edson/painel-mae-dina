@@ -597,6 +597,80 @@ body.light-view .class-box.active{
   .data-fixa-input{width:138px!important;flex-basis:138px!important;font-size:14px!important;}
 }
 
+
+
+/* AJUSTE MOBILE TOPBAR — SEM CORTES */
+@media (max-width:900px){
+  .topbar{
+    min-height:auto!important;
+    height:auto!important;
+    padding:8px 10px!important;
+    gap:8px!important;
+    flex-wrap:wrap!important;
+    overflow:visible!important;
+    align-items:center!important;
+  }
+  .topbar img{
+    height:22px!important;
+    max-width:150px!important;
+    flex:0 0 auto!important;
+  }
+  .topbar-divider{
+    height:24px!important;
+    margin:0 2px!important;
+    flex:0 0 1px!important;
+  }
+  .topbar-info{
+    flex:1 1 150px!important;
+    min-width:145px!important;
+    overflow:visible!important;
+  }
+  .topbar-title{
+    font-size:14px!important;
+    line-height:1.05!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+  }
+  .topbar-sub{
+    font-size:9px!important;
+    line-height:1.15!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+  }
+  .view-toggle{
+    order:10!important;
+    width:100%!important;
+    margin-left:0!important;
+    justify-content:center!important;
+    gap:6px!important;
+    padding:4px!important;
+  }
+  .view-btn{
+    flex:1 1 0!important;
+    max-width:220px!important;
+    font-size:10px!important;
+    padding:8px 8px!important;
+    letter-spacing:.35px!important;
+    text-align:center!important;
+  }
+}
+@media (max-width:430px){
+  .topbar{padding:7px 8px!important;gap:6px!important;}
+  .topbar img{height:20px!important;max-width:128px!important;}
+  .topbar-divider{height:22px!important;margin:0 1px!important;}
+  .topbar-info{min-width:116px!important;flex:1 1 116px!important;}
+  .topbar-title{font-size:13px!important;}
+  .topbar-sub{font-size:8px!important;}
+  .view-btn{font-size:9px!important;padding:7px 6px!important;}
+}
+@media (max-width:360px){
+  .topbar img{max-width:112px!important;height:18px!important;}
+  .topbar-title{font-size:12px!important;}
+  .topbar-sub{display:none!important;}
+}
+
 </style>
 </head>
 <body>
@@ -872,7 +946,7 @@ const PARAMS = Object.freeze({
   margemIdealShowroom: 0.06,
   margemIdealRepasse: 0.025,
   kitRafaelPct: 0.05,
-  taxaJurosAM: 0.017,
+  taxaJurosAM: 0.015,
   kitShowroomShare: 0.20,
   kitRepasseShare: 0.16
 });
@@ -913,9 +987,9 @@ const PARAMS = Object.freeze({
     margemIdealShowroom = smShowroom - custoBase
     margemIdealRepasse  = smRepasse  - custoBase
 
-  VALIDAÇÃO OPERACIONAL (Rev. 3 — Margem Líquida % sobre a Média de Mercado):
-    margemD0ShowPct = (mediaShowroom - avaliacao) / mediaShowroom
-    margemD0RepPct  = (mediaRepasse  - avaliacao) / mediaRepasse
+  VALIDAÇÃO OPERACIONAL (Rev. 18/06 — Margem Inicial em D-Zero do Excel):
+    margemD0ShowPct = ((smShowroom - avaliacao - reparo) - (kitRafaelPct * avaliacao)) / smShowroom
+    margemD0RepPct  = (smRepasse - avaliacao) / smRepasse
     Status "✓ cobre as metas" quando margemD0ShowPct >= metaShowPct E margemD0RepPct >= metaRepPct.
 
   DEADLINES:
@@ -990,27 +1064,26 @@ function calc(){
   const aavRepasse = numVal("aavRepasse");
   const smRepasse  = numVal("smRepasse");
 
-  // Custo base inclui Reparo (entra na composição do custo do veículo)
-  const custoVeiculo = avaliacao + reparo;
+  // Base do Excel: A5 = Avaliação Gestor SM.
+  // Reparo (B5) entra separado somente na margem/deadline Showroom.
+  const custoVeiculo = avaliacao;
 
   // Atualiza a data fixa no painel direito
 
   // ── PARÂMETROS INTERNOS REV. 3 (idênticos ao Excel) ──────
-  const kitPct       = PARAMS.kitRafaelPct;       // C14 = 0.05
-  const taxaJurosAM  = PARAMS.taxaJurosAM;        // E14 = 0.017
-  const kitShowShare = PARAMS.kitShowroomShare;   // C15 = 0.20
-  const kitRepShare  = PARAMS.kitRepasseShare;    // E15 = C15*0.8 = 0.16
-  const metaShowPct  = PARAMS.margemIdealShowroom; // C16 = 0.06
-  const metaRepPct   = PARAMS.margemIdealRepasse;  // E16 = 0.025
+  const kitPct       = PARAMS.kitRafaelPct;       // D15 = 0.05
+  const taxaJurosAM  = PARAMS.taxaJurosAM;        // F15 = 0.015
+  const kitShowShare = PARAMS.kitShowroomShare;   // D16 = 0.20
+  const kitRepShare  = PARAMS.kitRepasseShare;    // F16 = D16*80% = 0.16
+  const metaShowPct  = PARAMS.margemIdealShowroom; // D17 = 0.06
+  const metaRepPct   = PARAMS.margemIdealRepasse;  // F17 = 0.025
 
   // ── MÉDIAS DE MERCADO ────────────────────────────────────
-  // Excel B5:B8 (Showroom) = SM Showroom (Gestor), FIPE, AAV B2C, KBB Loja
-  // Excel B9:B11 (Repasse) = SM Repasse, KBB Repasse, AAV Repasse
-  // No layout solicitado o KBB Repasse foi removido, então a média Repasse
-  // agora pondera apenas SM Repasse + AAV B2B (B9 + B11), o que mantém a
-  // mesma lógica de média aritmética dos valores preenchidos.
-  const valsShow = [fipe, aavB2C, kbbLoja, smShowroom].filter(v => v > 0);
-  const valsRep  = [smRepasse, aavRepasse].filter(v => v > 0);
+  // Excel E4: Média Showroom = média de SM Showroom, AutoAvaliar B2C e FIPE.
+  // Excel E5: Média Repasse = média de AAV B2B Repasse e San Marino Repasse.
+  // KBB Loja permanece como referência visual/operacional, sem alterar a média do Excel.
+  const valsShow = [smShowroom, aavB2C, fipe].filter(v => v > 0);
+  const valsRep  = [aavRepasse, smRepasse].filter(v => v > 0);
 
   const mediaShowroom = valsShow.length ? valsShow.reduce((a,b)=>a+b,0) / valsShow.length : 0;
   const mediaRepasse  = valsRep.length  ? valsRep.reduce((a,b)=>a+b,0)  / valsRep.length  : 0;
@@ -1029,14 +1102,17 @@ function calc(){
   } else if(!temShowroomInputs && !temRepasseInputs){
     bar.className="status"; txt.textContent="Preencha ao menos um valor de Showroom ou Repasse"; ico.textContent="—";
   } else {
-    const margemD0ShowPct = temShowroomInputs && mediaShowroom>0 ? (mediaShowroom - custoVeiculo) / mediaShowroom : null;
-    const margemD0RepPct  = temRepasseInputs  && mediaRepasse>0  ? (mediaRepasse  - custoVeiculo) / mediaRepasse  : null;
-    const showOk = margemD0ShowPct===null || margemD0ShowPct >= metaShowPct;
-    const repOk  = margemD0RepPct===null  || margemD0RepPct  >= metaRepPct;
+    // Excel D18: Margem Inicial em D-Zero Showroom = ((SM Showroom - Avaliação - Reparos) - Kit Rafael) / SM Showroom.
+    // Excel F18: Margem Inicial em D-Zero Repasse = (San Marino Repasse - Avaliação) / San Marino Repasse.
+    // A validação principal passa a usar estes percentuais calculados, não valores fixos.
+    const margemD0ShowPct = smShowroom > 0 ? ((smShowroom - custoVeiculo - reparo) - (kitPct * custoVeiculo)) / smShowroom : null;
+    const margemD0RepPct  = smRepasse  > 0 ? (smRepasse - custoVeiculo) / smRepasse : null;
+    const showOk = margemD0ShowPct === null || margemD0ShowPct >= metaShowPct;
+    const repOk  = margemD0RepPct  === null || margemD0RepPct  >= metaRepPct;
     if(showOk && repOk){
-      bar.className="status ok"; txt.textContent="✓ Simulação cobre as metas internas"; ico.textContent="✅";
+      bar.className="status ok"; txt.textContent="✓ Margem D-Zero cobre as metas internas"; ico.textContent="✅";
     } else {
-      bar.className="status bad"; txt.textContent="⚠ Simulação abaixo da meta interna"; ico.textContent="⚠️";
+      bar.className="status bad"; txt.textContent="⚠ Margem D-Zero abaixo da meta interna"; ico.textContent="⚠️";
     }
   }
 
@@ -1055,13 +1131,13 @@ function calc(){
     return;
   }
 
-  // ── FÓRMULAS REV. 3 (idênticas ao Excel MAE-DINA) ────────
-  // Showroom D4:D9: (D10-B4) - (B4*(C14*(1-C15))) - (B4*(((C14*C15)+E14)*n/2))
-  //   onde B4 = custoVeiculo (Avaliação + Reparo), n = quinzenas, n/2 = meses
-  // Repasse  E4:E9: (D11-B4) - (B4*(((C14*E15)+E14)*n/2))
+  // ── FÓRMULAS REV. 18/06 (aderentes ao Excel MAE-DINA) ─────
+  // Showroom: (Média Showroom - Avaliação - Reparo - Kit Fixo) - custo variável/juros por prazo.
+  // Repasse:  (Média Repasse - Avaliação) - custo variável/juros por prazo.
   function margemShow(nDias){
     return mediaShowroom
       - custoVeiculo
+      - reparo
       - (custoVeiculo * (kitPct * (1-kitShowShare)))
       - (custoVeiculo * ((kitPct * kitShowShare) + taxaJurosAM) * (nDias/30));
   }
@@ -1091,7 +1167,7 @@ function calc(){
   });
 
   // Custo de hoje (mantém os IDs para o export e cálculos internos)
-  const custoBase = custoVeiculo + (custoVeiculo * kitPct);
+  const custoBase = custoVeiculo + reparo + (custoVeiculo * kitPct);
   setText("cardCustoHoje", brR(custoBase));
   setText("ecCustoHoje", brR(custoBase));
 
@@ -1112,8 +1188,8 @@ function calc(){
   const dailyRep  = ((custoVeiculo * taxaJurosAM) + (custoVeiculo * (kitPct * kitRepShare))) / 30;
 
   if(temShowroomInputs){
-    const diasIdeal = (mediaShowroom - custoVeiculo - (custoVeiculo * (kitPct * (1-kitShowShare))) - (metaShowPct * mediaShowroom)) / dailyShow;
-    const diasZero  = (mediaShowroom - custoVeiculo - (custoVeiculo * (kitPct * (1-kitShowShare)))) / dailyShow;
+    const diasIdeal = (mediaShowroom - custoVeiculo - reparo - (custoVeiculo * (kitPct * (1-kitShowShare))) - (metaShowPct * mediaShowroom)) / dailyShow;
+    const diasZero  = (mediaShowroom - custoVeiculo - reparo - (custoVeiculo * (kitPct * (1-kitShowShare)))) / dailyShow;
     setText("ddlShowIdeal", deadlineTxt(diasIdeal,"ideal")); $("ddlShowIdeal").className="deadline-val "+classDeadline(diasIdeal,"ideal");
     setText("ddlShowZero", deadlineTxt(diasZero,"zero"));   $("ddlShowZero").className="deadline-val "+classDeadline(diasZero,"zero");
     setText("eddlShowIdeal", deadlineTxt(diasIdeal,"ideal"));
