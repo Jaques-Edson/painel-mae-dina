@@ -213,6 +213,62 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
   border:1px solid rgba(37,215,243,.5);color:#25d7f3;
   display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;}
 
+/* PERFIL (Showroom / Repasse) */
+.radio-row{display:flex;gap:8px;}
+.radio-pill{
+  flex:1;padding:8px 12px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:7px;background:rgba(2,8,18,.9);
+  text-align:center;cursor:pointer;
+  font-size:12px;font-weight:700;color:#c8d8e8;
+  transition:all .15s;letter-spacing:.3px;
+  user-select:none;
+}
+.radio-pill input{display:none;}
+.radio-pill.active{
+  background:rgba(37,215,243,.15);
+  border-color:#25d7f3;color:#25d7f3;
+}
+
+/* CLASSIFICAÇÃO A B C D */
+.class-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.class-box{
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:7px;background:rgba(2,8,18,.9);
+  text-align:center;padding:9px 0;
+  cursor:pointer;font-size:14px;font-weight:900;
+  color:#c8d8e8;transition:all .15s;
+  user-select:none;
+}
+.class-box input{display:none;}
+.class-box.active{
+  background:rgba(255,215,0,.15);
+  border-color:#ffd700;color:#ffd700;
+}
+
+/* DATA FIXA NO PAINEL DIREITO */
+.data-fixa{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;border-radius:9px;
+  background:rgba(255,215,0,.06);
+  border:1px solid rgba(255,215,0,.25);
+}
+.data-fixa-lbl{
+  font-size:10px;font-weight:900;
+  text-transform:uppercase;letter-spacing:.7px;
+  color:#7a9ab8;
+}
+.data-fixa-val, .data-fixa-input{
+  font-size:14px;font-weight:950;color:#ffd700;
+  letter-spacing:-.3px;
+}
+.data-fixa-input{
+  width:150px;height:34px;text-align:right;
+  border:0;background:transparent;padding:0;
+  outline:none;font-variant-numeric:tabular-nums;
+}
+.data-fixa-input::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.85;cursor:pointer;}
+
 /* DATA ABERTURA */
 .data-row{
   display:flex;align-items:center;justify-content:flex-end;gap:8px;
@@ -378,16 +434,95 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
   .splash-icon::before{font-size:36px;}
 }
 
+
+/* ALTERNÂNCIA DE VISÃO */
+.view-toggle{
+  flex:0 0 auto;display:flex;align-items:center;gap:6px;
+  border:1px solid rgba(255,255,255,.14);border-radius:999px;
+  background:rgba(255,255,255,.04);padding:3px;
+}
+.view-btn{
+  border:0;border-radius:999px;padding:7px 10px;
+  font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;
+  color:#8fa8c0;background:transparent;cursor:pointer;white-space:nowrap;
+}
+.view-btn.active{background:#ffd700;color:#04101e;}
+body.light-view{
+  color:#111827;background:#eceff3;
+}
+body.light-view html{background:#eceff3;}
+body.light-view .topbar{background:#ffffff;border-bottom:1px solid #c7d2da;box-shadow:0 1px 8px rgba(0,0,0,.08);}
+body.light-view .topbar-title{color:#111827;}
+body.light-view .topbar-sub,
+body.light-view .blk-title,
+body.light-view .field label,
+body.light-view .sec-title,
+body.light-view .data-fixa-lbl,
+body.light-view .deadline-lbl,
+body.light-view .c-txt,
+body.light-view .credito{color:#4d6680;}
+body.light-view .body{background:#eceff3;}
+body.light-view .left{background:#e5e9ef;border-right:1px solid #c7d2da;}
+body.light-view .right{background:#eceff3;}
+body.light-view .blk,
+body.light-view .card,
+body.light-view .deadline-blk,
+body.light-view .data-row,
+body.light-view .status,
+body.light-view .nota{background:#ffffff;border-color:#c7d2da;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+body.light-view input[type="text"],
+body.light-view input[type="number"],
+body.light-view input[type="date"],
+body.light-view select{background:#ffffff;color:#111827;border-color:#c7d2da;}
+body.light-view .ro{background:#fff7e6!important;color:#92400e!important;border-color:#d97706!important;}
+body.light-view .ro.ciano{background:#ecfeff!important;color:#155e75!important;border-color:#0891b2!important;}
+body.light-view .cmp{background:#ffffff;border:1px solid #c7d2da;border-radius:10px;overflow:hidden;}
+body.light-view .cmp th{background:#e5e9ef;color:#334155;border-bottom:1px solid #c7d2da;}
+body.light-view .cmp td{color:#111827;border-bottom:1px solid #e5e7eb;}
+body.light-view .deadline-blk.show{background:#fff7e6;border-color:#d97706;}
+body.light-view .deadline-blk.rep{background:#ecfeff;border-color:#0891b2;}
+body.light-view .data-fixa{background:#fff7e6;border-color:#d97706;}
+body.light-view .data-fixa-input{color:#111827;}
+body.light-view .data-fixa-input::-webkit-calendar-picker-indicator{filter:none;opacity:.75;}
+body.light-view .topbar-divider{background:#c7d2da;}
+body.light-view .view-toggle{background:#e5e9ef;border-color:#c7d2da;}
+
+body.light-view .sec-title.yl,
+body.light-view .blk.flex-blk .blk-title,
+body.light-view .deadline-blk.show .deadline-title,
+body.light-view .card.yl .c-lbl,
+body.light-view .cmp .r-show td:first-child{color:#d97706;}
+body.light-view .sec-title.cy,
+body.light-view .blk.ciano-blk .blk-title,
+body.light-view .deadline-blk.rep .deadline-title,
+body.light-view .card.cy .c-lbl,
+body.light-view .cmp .r-rep td:first-child{color:#0891b2;}
+body.light-view .cmp td.pos,
+body.light-view .deadline-val.ok,
+body.light-view .card.gr .c-val{color:#16a34a!important;}
+body.light-view .cmp td.neg,
+body.light-view .deadline-val.bad,
+body.light-view .card.rd .c-val{color:#dc2626!important;}
+body.light-view .btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#111827;}
+body.light-view .view-btn.active{background:#d97706;color:#ffffff;}
+@media (max-width:960px){
+  .view-toggle{margin-left:auto;}
+  .view-btn{font-size:9px;padding:7px 8px;}
+}
+@media (max-width:430px){
+  .view-btn{font-size:8px;padding:6px 7px;}
+}
+
 /* EXPORT */
 .exp-wrap{position:fixed;left:-99999px;top:0;width:1100px;padding:22px;
   background:linear-gradient(135deg,#04101e,#020c14);z-index:-1;}
 .exp-sheet{border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;
   background:rgba(8,22,42,.99);}
-.exp-top{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center;margin-bottom:14px;}
-.exp-logo{height:52px;width:200px;display:flex;align-items:center;overflow:hidden;flex-shrink:0;}
-.exp-logo img{height:100%;max-width:100%;object-fit:contain;display:block;}
-.exp-title{font-size:28px;font-weight:950;color:#f0f4ff;letter-spacing:-.8px;}
-.exp-sub{font-size:13px;color:#7a9ab8;margin-top:4px;}
+.exp-top{display:flex;gap:14px;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08);}
+.exp-logo{height:26px;width:190px;display:flex;align-items:center;justify-content:flex-start;overflow:hidden;flex:0 0 190px;}
+.exp-logo img{height:26px!important;width:auto!important;max-width:190px!important;object-fit:contain;object-position:left center;display:block;}
+.exp-title{font-size:30px;font-weight:950;color:#f0f4ff;letter-spacing:-.9px;line-height:1;}
+.exp-sub{font-size:13px;color:#7a9ab8;margin-top:8px;}
 .exp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:12px 0;}
 .exp-legal{padding:9px 12px;display:flex;gap:8px;
   border:1px solid rgba(255,255,255,.08);border-radius:10px;
@@ -395,6 +530,73 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 .exp-credito{text-align:right;font-size:9px;color:rgba(122,154,184,.6);margin-top:6px;}
 
 .admin-hidden{display:none!important;}
+
+/* AJUSTES EDSON — DATA, SELEÇÃO E LEITURA DO PAINEL DIREITO */
+.data-fixa{
+  min-height:54px;
+  padding:8px 16px;
+  gap:14px;
+}
+.data-fixa-lbl{
+  flex:0 0 auto;
+  font-size:12px;
+  line-height:1.15;
+}
+.data-fixa-input{
+  width:142px!important;
+  height:34px!important;
+  flex:0 0 142px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-align:right!important;
+  padding:0 2px 0 0!important;
+  font-size:15px!important;
+}
+body.light-view .data-fixa-input{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  color:#111827!important;
+}
+.radio-pill.active{
+  background:rgba(37,215,243,.20);
+  box-shadow:inset 0 0 0 1px rgba(37,215,243,.25);
+}
+.class-box.active{
+  background:rgba(255,215,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,215,0,.25);
+}
+body.light-view .radio-pill.active{
+  background:#dff8ff!important;
+  color:#0284c7!important;
+  border-color:#06b6d4!important;
+}
+body.light-view .class-box.active{
+  background:#fff7d6!important;
+  color:#ca8a04!important;
+  border-color:#eab308!important;
+}
+@media (min-width:961px){
+  .right{padding:14px 18px;gap:14px;}
+  .sec-title{font-size:12px;margin-top:6px;}
+  .deadline-wrap{gap:14px;}
+  .deadline-blk{padding:18px 20px;}
+  .deadline-title{font-size:14px;margin-bottom:14px;}
+  .deadline-row{padding:10px 0;}
+  .deadline-lbl{font-size:12px;}
+  .deadline-val{font-size:18px;}
+  .cmp th{font-size:10px;padding:10px 10px;}
+  .cmp td{font-size:16px;padding:10px 10px;}
+  .cmp td:first-child{font-size:13px;}
+  .credito{font-size:9.5px;padding-top:6px;}
+}
+@media (max-width:960px){
+  .data-fixa{min-height:50px;padding:8px 12px;}
+  .data-fixa-lbl{font-size:11px;}
+  .data-fixa-input{width:138px!important;flex-basis:138px!important;font-size:14px!important;}
+}
+
 </style>
 </head>
 <body>
@@ -426,6 +628,10 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
     <div class="topbar-title">MAE-DINA</div>
     <div class="topbar-sub">Simulador de Avaliação, Margem e Depreciação</div>
   </div>
+  <div class="view-toggle" aria-label="Alternar visão">
+    <button type="button" class="view-btn active" id="btnNoite">Modo Analítico</button>
+    <button type="button" class="view-btn" id="btnRua">Modo Pátio</button>
+  </div>
 </div>
 
 <!-- CORPO -->
@@ -434,96 +640,124 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
   <!-- ESQUERDO -->
   <div class="left">
 
-    <!-- DATA DE ABERTURA -->
-    <div class="data-row">
-      <label>Data de Abertura</label>
-      <input id="dataAbertura" type="date" class="ro">
-    </div>
-
-    <!-- BLOCO 1: VEÍCULO -->
+    <!-- VEÍCULO + PLACA -->
     <div class="blk">
-      <div class="blk-title">Veículo</div>
-      <div class="field">
-        <label>Identificação / Modelo</label>
-        <input id="modelo" type="text" placeholder="Ex: Fiat Pulse 2023">
-      </div>
-    </div>
-
-    <!-- BLOCO 2: AVALIAÇÃO (COMPRA) -->
-    <div class="blk flex-blk">
-      <div class="blk-title" style="text-align:center;font-size:13px;color:#ffd700;">Avaliação (Compra)</div>
-      <div class="field">
-        <label>Quanto quer pagar no carro (R$)</label>
-        <input id="avaliacao" type="text" inputmode="numeric" placeholder="Ex: 85.000">
-      </div>
-    </div>
-
-    <!-- BLOCO 3: PREÇO DE VENDA ESTIMADO (logo abaixo da avaliação) -->
-    <div class="blk ciano-blk">
-      <div class="blk-title" style="text-align:center;font-size:13px;color:#25d7f3;">Preço de Venda Estimado</div>
-      <div class="g2 g2-inline">
+      <div class="g2">
         <div class="field">
-          <label>Showroom (R$)</label>
+          <label>Veículo</label>
+          <input id="modelo" type="text" placeholder="Ex: Pulse 2023">
+        </div>
+        <div class="field">
+          <label>Placa</label>
+          <input id="placa" type="text" placeholder="Ex: ITW4E55" style="text-transform:uppercase;">
+        </div>
+      </div>
+    </div>
+
+    <!-- AVALIAÇÃO + REPARO -->
+    <div class="blk flex-blk">
+      <div class="g2">
+        <div class="field">
+          <label>Avaliação (R$)</label>
+          <input id="avaliacao" type="text" inputmode="numeric" placeholder="Ex: 85.000">
+        </div>
+        <div class="field">
+          <label>Reparo (R$)</label>
+          <input id="reparo" type="text" inputmode="numeric" placeholder="Ex: 0">
+        </div>
+      </div>
+    </div>
+
+    <!-- VLR SUGERIDO AAV + KM -->
+    <div class="blk">
+      <div class="g2">
+        <div class="field">
+          <label>Vlr sugerido p/ AutoAvaliar (R$)</label>
+          <input id="vlrSugAAV" type="text" inputmode="numeric" placeholder="Ex: 86.000">
+        </div>
+        <div class="field">
+          <label>KM</label>
+          <input id="km" type="text" inputmode="numeric" placeholder="Ex: 120000">
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL: SHOWROOM OU REPASSE -->
+    <div class="blk">
+      <div class="blk-title">Perfil</div>
+      <div class="radio-row" id="perfilRow">
+        <label class="radio-pill" data-perfil="showroom">
+          <input type="radio" name="perfil" value="showroom">Showroom
+        </label>
+        <label class="radio-pill" data-perfil="repasse">
+          <input type="radio" name="perfil" value="repasse">Repasse
+        </label>
+      </div>
+    </div>
+
+    <!-- CLASSIFICAÇÃO A B C D -->
+    <div class="blk">
+      <div class="blk-title">Classificação</div>
+      <div class="class-row" id="classRow">
+        <label class="class-box" data-class="A"><input type="radio" name="classificacao" value="A">A</label>
+        <label class="class-box" data-class="B"><input type="radio" name="classificacao" value="B">B</label>
+        <label class="class-box" data-class="C"><input type="radio" name="classificacao" value="C">C</label>
+        <label class="class-box" data-class="D"><input type="radio" name="classificacao" value="D">D</label>
+      </div>
+    </div>
+
+    <!-- GESTOR SM + FIPE -->
+    <div class="blk ciano-blk">
+      <div class="g2">
+        <div class="field">
+          <label>Gestor SM (R$)</label>
           <input id="smShowroom" type="text" inputmode="numeric" placeholder="Ex: 102.000">
         </div>
         <div class="field">
-          <label>Repasse (R$)</label>
-          <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
+          <label>FIPE (R$)</label>
+          <input id="fipe" type="text" inputmode="numeric" placeholder="Ex: 100.000">
         </div>
       </div>
     </div>
 
-    <!-- STATUS (logo abaixo do preço de venda) -->
+    <!-- AAV B2C + KBB LOJA -->
+    <div class="blk">
+      <div class="g2">
+        <div class="field">
+          <label>AAV B2C (R$)</label>
+          <input id="aavB2C" type="text" inputmode="numeric" placeholder="Ex: 98.000">
+        </div>
+        <div class="field">
+          <label>KBB Loja (R$)</label>
+          <input id="kbbLoja" type="text" inputmode="numeric" placeholder="Ex: 97.000">
+        </div>
+      </div>
+    </div>
+
+    <!-- REPASSE SM + AAV B2B -->
+    <div class="blk">
+      <div class="g2">
+        <div class="field">
+          <label>Repasse SM (R$)</label>
+          <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
+        </div>
+        <div class="field">
+          <label>AAV B2B (R$)</label>
+          <input id="aavRepasse" type="text" inputmode="numeric" placeholder="Ex: 88.000">
+        </div>
+      </div>
+    </div>
+
+    <!-- STATUS -->
     <div class="status" id="sBar">
       <div class="status-txt" id="sTxt">Preencha os campos de avaliação</div>
       <span id="sIco">—</span>
     </div>
 
-    <!-- BLOCO 4: REFERÊNCIAS DE MERCADO -->
-    <div class="blk">
-      <div class="blk-title">Referências de Mercado</div>
-      <div class="g2" style="margin-bottom:8px;">
-        <div class="field">
-          <label>Tabela FIPE (R$)</label>
-          <input id="fipe" type="text" inputmode="numeric" placeholder="Ex: 100.000">
-        </div>
-        <div class="field">
-          <label>AutoAvaliar B2C (R$)</label>
-          <input id="aavB2C" type="text" inputmode="numeric" placeholder="Ex: 98.000">
-        </div>
-      </div>
-      <div class="g2">
-        <div class="field">
-          <label>KBB Loja — Showroom (R$)</label>
-          <input id="kbbLoja" type="text" inputmode="numeric" placeholder="Ex: 97.000">
-        </div>
-        <div class="field">
-          <label>KBB Repasse (R$)</label>
-          <input id="kbbRepasse" type="text" inputmode="numeric" placeholder="Ex: 89.000">
-        </div>
-      </div>
-      <div class="field" style="margin-top:8px;">
-        <label>AutoAvaliar Repasse (R$)</label>
-        <input id="aavRepasse" type="text" inputmode="numeric" placeholder="Ex: 88.000">
-      </div>
-    </div>
-
-    <!-- MÉDIAS CALCULADAS -->
-    <div class="blk">
-      <div class="blk-title">Médias Ponderadas de Mercado</div>
-      <div class="g2">
-        <div class="field">
-          <label>Média Showroom</label>
-          <input id="mediaShowroom" type="text" readonly class="ro" placeholder="—">
-        </div>
-        <div class="field">
-          <label>Média Repasse</label>
-          <input id="mediaRepasse" type="text" readonly class="ro ciano" placeholder="—">
-        </div>
-      </div>
-    </div>
-
-    <!-- PARÂMETROS INTERNOS DA COZINHA: ocultos para o avaliador -->
+    <!-- CAMPOS OCULTOS: KBB Repasse + parâmetros internos -->
+    <input id="kbbRepasse" type="hidden" value="">
+    <input id="mediaShowroom" type="hidden" value="">
+    <input id="mediaRepasse" type="hidden" value="">
     <input id="kitRafael" type="hidden" value="">
     <input id="taxaJuros" type="hidden" value="">
 
@@ -534,32 +768,11 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
   <!-- DIREITO -->
   <div class="right">
 
-    <!-- RESUMO DO DIA 0 -->
-    <div class="sec-title">Resumo na Data de Abertura</div>
-    <div class="cards">
-      <div class="card">
-        <div class="c-lbl">Custo Total Hoje</div>
-        <div class="c-val" id="cardCustoHoje">—</div>
-        <div class="c-txt">Avaliação + custos internos</div>
-      </div>
+    <!-- DATA FIXA NO TOPO -->
+    <div class="data-fixa">
+      <span class="data-fixa-lbl">Data de Abertura</span>
+      <input id="dataAbertura" type="date" class="data-fixa-input" aria-label="Data de Abertura">
     </div>
-
-    <!-- TABELA DE PROJEÇÃO TEMPORAL -->
-    <div class="sec-title">Projeção de Cenários Futuros</div>
-    <table class="cmp">
-      <thead><tr>
-        <th>Prazo</th><th>Data</th><th>Margem Showroom</th><th>Margem Repasse</th>
-      </tr></thead>
-      <tbody id="tabelaProjecao">
-        <tr class="r-show"><td>Abertura (Hoje)</td><td id="d-0">—</td><td id="ms-0">—</td><td id="mr-0">—</td></tr>
-        <tr class="r-show"><td>+15 dias</td><td id="d-15">—</td><td id="ms-15">—</td><td id="mr-15">—</td></tr>
-        <tr class="r-show"><td>+30 dias</td><td id="d-30">—</td><td id="ms-30">—</td><td id="mr-30">—</td></tr>
-        <tr class="r-show"><td>+45 dias</td><td id="d-45">—</td><td id="ms-45">—</td><td id="mr-45">—</td></tr>
-        <tr class="r-show"><td>+60 dias</td><td id="d-60">—</td><td id="ms-60">—</td><td id="mr-60">—</td></tr>
-        <tr class="r-show"><td>+75 dias</td><td id="d-75">—</td><td id="ms-75">—</td><td id="mr-75">—</td></tr>
-        <tr class="r-show"><td>+90 dias</td><td id="d-90">—</td><td id="ms-90">—</td><td id="mr-90">—</td></tr>
-      </tbody>
-    </table>
 
     <!-- DEADLINES -->
     <div class="sec-title yl">Prazos Limite (Deadlines)</div>
@@ -587,6 +800,23 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
         </div>
       </div>
     </div>
+    <!-- TABELA DE PROJEÇÃO TEMPORAL -->
+    <div class="sec-title">Projeção de Cenários Futuros</div>
+    <table class="cmp">
+      <thead><tr>
+        <th>Prazo</th><th>Data</th><th>Margem Showroom</th><th>Margem Repasse</th>
+      </tr></thead>
+      <tbody id="tabelaProjecao">
+        <tr class="r-show"><td>Abertura (Hoje)</td><td id="d-0">—</td><td id="ms-0">—</td><td id="mr-0">—</td></tr>
+        <tr class="r-show"><td>+15 dias</td><td id="d-15">—</td><td id="ms-15">—</td><td id="mr-15">—</td></tr>
+        <tr class="r-show"><td>+30 dias</td><td id="d-30">—</td><td id="ms-30">—</td><td id="mr-30">—</td></tr>
+        <tr class="r-show"><td>+45 dias</td><td id="d-45">—</td><td id="ms-45">—</td><td id="mr-45">—</td></tr>
+        <tr class="r-show"><td>+60 dias</td><td id="d-60">—</td><td id="ms-60">—</td><td id="mr-60">—</td></tr>
+        <tr class="r-show"><td>+75 dias</td><td id="d-75">—</td><td id="ms-75">—</td><td id="mr-75">—</td></tr>
+        <tr class="r-show"><td>+90 dias</td><td id="d-90">—</td><td id="ms-90">—</td><td id="mr-90">—</td></tr>
+      </tbody>
+    </table>
+
     <div class="credito" id="creditoLeft">Elaborado por Edson Jaques</div>
 
   </div>
@@ -615,7 +845,7 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
         <tr class="r-show"><td>+90 dias</td><td id="ed-90">—</td><td id="ems-90">—</td><td id="emr-90">—</td></tr>
       </tbody>
     </table>
-    <div class="exp-cards">
+    <div class="exp-cards" style="display:none;">
       <div class="card"><div class="c-lbl">Custo Total Hoje</div><div class="c-val" id="ecCustoHoje">—</div><div class="c-txt">Avaliação + custos internos</div></div>
     </div>
     <div class="deadline-wrap" style="margin-bottom:10px;">
@@ -752,51 +982,41 @@ function calc(){
   // ── INPUTS VISÍVEIS ───────────────────────────────────────
   const F2        = parseDateInput($("dataAbertura").value);
   const avaliacao = numVal("avaliacao");
+  const reparo    = numVal("reparo");
   const fipe       = numVal("fipe");
   const aavB2C     = numVal("aavB2C");
   const kbbLoja    = numVal("kbbLoja");
   const smShowroom = numVal("smShowroom");
-  const kbbRepasse = numVal("kbbRepasse");
   const aavRepasse = numVal("aavRepasse");
   const smRepasse  = numVal("smRepasse");
 
-  // ── PARÂMETROS INTERNOS REV. 3 ───────────────────────────
-  const kitPct       = PARAMS.kitRafaelPct;
-  const taxaJurosAM  = PARAMS.taxaJurosAM;
-  const kitShowShare = PARAMS.kitShowroomShare;
-  const kitRepShare  = PARAMS.kitRepasseShare;
-  const metaShowPct  = PARAMS.margemIdealShowroom;
-  const metaRepPct   = PARAMS.margemIdealRepasse;
+  // Custo base inclui Reparo (entra na composição do custo do veículo)
+  const custoVeiculo = avaliacao + reparo;
 
-  const kitInternoTotal = avaliacao * kitPct;
-  const custoBase       = avaliacao + kitInternoTotal;
+  // Atualiza a data fixa no painel direito
+
+  // ── PARÂMETROS INTERNOS REV. 3 (idênticos ao Excel) ──────
+  const kitPct       = PARAMS.kitRafaelPct;       // C14 = 0.05
+  const taxaJurosAM  = PARAMS.taxaJurosAM;        // E14 = 0.017
+  const kitShowShare = PARAMS.kitShowroomShare;   // C15 = 0.20
+  const kitRepShare  = PARAMS.kitRepasseShare;    // E15 = C15*0.8 = 0.16
+  const metaShowPct  = PARAMS.margemIdealShowroom; // C16 = 0.06
+  const metaRepPct   = PARAMS.margemIdealRepasse;  // E16 = 0.025
 
   // ── MÉDIAS DE MERCADO ────────────────────────────────────
-  // Referências externas (FIPE, AAV, KBB)
-  const temRefShowroom = (fipe||aavB2C||kbbLoja);
-  const temRefRepasse  = (kbbRepasse||aavRepasse);
-  const temShowroomInputs = (temRefShowroom||smShowroom);
-  const temRepasseInputs  = (temRefRepasse||smRepasse);
+  // Excel B5:B8 (Showroom) = SM Showroom (Gestor), FIPE, AAV B2C, KBB Loja
+  // Excel B9:B11 (Repasse) = SM Repasse, KBB Repasse, AAV Repasse
+  // No layout solicitado o KBB Repasse foi removido, então a média Repasse
+  // agora pondera apenas SM Repasse + AAV B2B (B9 + B11), o que mantém a
+  // mesma lógica de média aritmética dos valores preenchidos.
+  const valsShow = [fipe, aavB2C, kbbLoja, smShowroom].filter(v => v > 0);
+  const valsRep  = [smRepasse, aavRepasse].filter(v => v > 0);
 
-  // Se referências de mercado estiverem vazias, o preço estimado do gestor
-  // (smShowroom / smRepasse) assume sozinho como média — sem quebrar o cálculo.
-  let mediaShowroom, mediaRepasse;
-  if(temRefShowroom && smShowroom){
-    mediaShowroom = (fipe + aavB2C + kbbLoja + smShowroom) / 4;
-  } else if(temRefShowroom){
-    const cntS = (fipe?1:0)+(aavB2C?1:0)+(kbbLoja?1:0);
-    mediaShowroom = cntS>0 ? (fipe+aavB2C+kbbLoja)/cntS : 0;
-  } else {
-    mediaShowroom = smShowroom||0;
-  }
-  if(temRefRepasse && smRepasse){
-    mediaRepasse = (kbbRepasse + aavRepasse + smRepasse) / 3;
-  } else if(temRefRepasse){
-    const cntR = (kbbRepasse?1:0)+(aavRepasse?1:0);
-    mediaRepasse = cntR>0 ? (kbbRepasse+aavRepasse)/cntR : 0;
-  } else {
-    mediaRepasse = smRepasse||0;
-  }
+  const mediaShowroom = valsShow.length ? valsShow.reduce((a,b)=>a+b,0) / valsShow.length : 0;
+  const mediaRepasse  = valsRep.length  ? valsRep.reduce((a,b)=>a+b,0)  / valsRep.length  : 0;
+
+  const temShowroomInputs = valsShow.length > 0;
+  const temRepasseInputs  = valsRep.length > 0;
 
   $("mediaShowroom").value = temShowroomInputs ? brR(mediaShowroom) : "";
   $("mediaRepasse").value  = temRepasseInputs  ? brR(mediaRepasse)  : "";
@@ -807,10 +1027,10 @@ function calc(){
   if(!avaliacao){
     bar.className="status"; txt.textContent="Preencha o valor da Avaliação"; ico.textContent="—";
   } else if(!temShowroomInputs && !temRepasseInputs){
-    bar.className="status"; txt.textContent="Preencha ao menos os dados de Showroom ou Repasse"; ico.textContent="—";
+    bar.className="status"; txt.textContent="Preencha ao menos um valor de Showroom ou Repasse"; ico.textContent="—";
   } else {
-    const margemD0ShowPct = temShowroomInputs && mediaShowroom>0 ? (mediaShowroom - avaliacao) / mediaShowroom : null;
-    const margemD0RepPct  = temRepasseInputs  && mediaRepasse>0  ? (mediaRepasse  - avaliacao) / mediaRepasse  : null;
+    const margemD0ShowPct = temShowroomInputs && mediaShowroom>0 ? (mediaShowroom - custoVeiculo) / mediaShowroom : null;
+    const margemD0RepPct  = temRepasseInputs  && mediaRepasse>0  ? (mediaRepasse  - custoVeiculo) / mediaRepasse  : null;
     const showOk = margemD0ShowPct===null || margemD0ShowPct >= metaShowPct;
     const repOk  = margemD0RepPct===null  || margemD0RepPct  >= metaRepPct;
     if(showOk && repOk){
@@ -835,19 +1055,20 @@ function calc(){
     return;
   }
 
-  // Fórmulas Rev. 3, equivalentes à planilha:
-  // Showroom: média - avaliação - parte fixa do kit - depreciação/juros mensal proporcional aos dias.
-  // Repasse: média - avaliação - depreciação/juros mensal proporcional aos dias.
+  // ── FÓRMULAS REV. 3 (idênticas ao Excel MAE-DINA) ────────
+  // Showroom D4:D9: (D10-B4) - (B4*(C14*(1-C15))) - (B4*(((C14*C15)+E14)*n/2))
+  //   onde B4 = custoVeiculo (Avaliação + Reparo), n = quinzenas, n/2 = meses
+  // Repasse  E4:E9: (D11-B4) - (B4*(((C14*E15)+E14)*n/2))
   function margemShow(nDias){
     return mediaShowroom
-      - avaliacao
-      - (avaliacao * (kitPct * (1-kitShowShare)))
-      - (avaliacao * ((kitPct * kitShowShare) + taxaJurosAM) * (nDias/30));
+      - custoVeiculo
+      - (custoVeiculo * (kitPct * (1-kitShowShare)))
+      - (custoVeiculo * ((kitPct * kitShowShare) + taxaJurosAM) * (nDias/30));
   }
   function margemRep(nDias){
     return mediaRepasse
-      - avaliacao
-      - (avaliacao * ((kitPct * kitRepShare) + taxaJurosAM) * (nDias/30));
+      - custoVeiculo
+      - (custoVeiculo * ((kitPct * kitRepShare) + taxaJurosAM) * (nDias/30));
   }
 
   const periodos = [0,15,30,45,60,75,90];
@@ -869,6 +1090,8 @@ function calc(){
     }
   });
 
+  // Custo de hoje (mantém os IDs para o export e cálculos internos)
+  const custoBase = custoVeiculo + (custoVeiculo * kitPct);
   setText("cardCustoHoje", brR(custoBase));
   setText("ecCustoHoje", brR(custoBase));
 
@@ -884,12 +1107,13 @@ function calc(){
     return fmtData(addDays(F2,d)) + ` (+${d}d)`;
   }
 
-  const dailyShow = ((avaliacao * taxaJurosAM) + (avaliacao * (kitPct * kitShowShare))) / 30;
-  const dailyRep  = ((avaliacao * taxaJurosAM) + (avaliacao * (kitPct * kitRepShare))) / 30;
+  // ── DATAS LIMITE (idênticas ao Excel: C12, E12, C13, E13) ──
+  const dailyShow = ((custoVeiculo * taxaJurosAM) + (custoVeiculo * (kitPct * kitShowShare))) / 30;
+  const dailyRep  = ((custoVeiculo * taxaJurosAM) + (custoVeiculo * (kitPct * kitRepShare))) / 30;
 
   if(temShowroomInputs){
-    const diasIdeal = (mediaShowroom - avaliacao - (avaliacao * (kitPct * (1-kitShowShare))) - (metaShowPct * mediaShowroom)) / dailyShow;
-    const diasZero  = (mediaShowroom - avaliacao - (avaliacao * (kitPct * (1-kitShowShare)))) / dailyShow;
+    const diasIdeal = (mediaShowroom - custoVeiculo - (custoVeiculo * (kitPct * (1-kitShowShare))) - (metaShowPct * mediaShowroom)) / dailyShow;
+    const diasZero  = (mediaShowroom - custoVeiculo - (custoVeiculo * (kitPct * (1-kitShowShare)))) / dailyShow;
     setText("ddlShowIdeal", deadlineTxt(diasIdeal,"ideal")); $("ddlShowIdeal").className="deadline-val "+classDeadline(diasIdeal,"ideal");
     setText("ddlShowZero", deadlineTxt(diasZero,"zero"));   $("ddlShowZero").className="deadline-val "+classDeadline(diasZero,"zero");
     setText("eddlShowIdeal", deadlineTxt(diasIdeal,"ideal"));
@@ -900,8 +1124,8 @@ function calc(){
   }
 
   if(temRepasseInputs){
-    const diasIdeal = (mediaRepasse - avaliacao - (metaRepPct * mediaRepasse)) / dailyRep;
-    const diasZero  = (mediaRepasse - avaliacao) / dailyRep;
+    const diasIdeal = (mediaRepasse - custoVeiculo - (metaRepPct * mediaRepasse)) / dailyRep;
+    const diasZero  = (mediaRepasse - custoVeiculo) / dailyRep;
     setText("ddlRepIdeal", deadlineTxt(diasIdeal,"ideal")); $("ddlRepIdeal").className="deadline-val "+classDeadline(diasIdeal,"ideal");
     setText("ddlRepZero", deadlineTxt(diasZero,"zero"));   $("ddlRepZero").className="deadline-val "+classDeadline(diasZero,"zero");
     setText("eddlRepIdeal", deadlineTxt(diasIdeal,"ideal"));
@@ -912,7 +1136,9 @@ function calc(){
   }
 
   const modeloTxt = $("modelo").value || "Veículo";
-  $("expSum").textContent = `${modeloTxt} | Avaliação ${brR(avaliacao)} | Abertura ${fmtData(F2)}`;
+  const placaTxt  = ($("placa").value || "").toUpperCase();
+  const headerVeic = placaTxt ? `${modeloTxt} • ${placaTxt}` : modeloTxt;
+  $("expSum").textContent = `${headerVeic} | Avaliação ${brR(avaliacao)} | Abertura ${fmtData(F2)}`;
 }
 
 async function download(){
@@ -957,8 +1183,52 @@ function bindMoeda(id){
     calc();
   });
 }
-["avaliacao","fipe","aavB2C","kbbLoja","smShowroom","kbbRepasse","aavRepasse","smRepasse","kitRafael"]
+["avaliacao","reparo","vlrSugAAV","fipe","aavB2C","kbbLoja","smShowroom","aavRepasse","smRepasse","kitRafael"]
   .forEach(bindMoeda);
+
+// KM aceita apenas dígitos (sem separador de milhar para não confundir com R$)
+(function bindKM(){
+  const el = $("km"); if(!el) return;
+  el.addEventListener("input", function(){
+    this.value = this.value.replace(/\D/g,"");
+    calc();
+  });
+})();
+
+// Placa: uppercase automático
+(function bindPlaca(){
+  const el = $("placa"); if(!el) return;
+  el.addEventListener("input", function(){
+    this.value = this.value.toUpperCase();
+    calc();
+  });
+})();
+
+// Perfil (Showroom/Repasse) — radios visuais
+(function bindPerfil(){
+  document.querySelectorAll('#perfilRow .radio-pill').forEach(pill => {
+    pill.addEventListener('click', function(){
+      document.querySelectorAll('#perfilRow .radio-pill').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      const input = this.querySelector('input');
+      if(input) input.checked = true;
+      calc();
+    });
+  });
+})();
+
+// Classificação (A/B/C/D) — radios visuais
+(function bindClassificacao(){
+  document.querySelectorAll('#classRow .class-box').forEach(box => {
+    box.addEventListener('click', function(){
+      document.querySelectorAll('#classRow .class-box').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const input = this.querySelector('input');
+      if(input) input.checked = true;
+      calc();
+    });
+  });
+})();
 
 $("taxaJuros").addEventListener("input",calc);
 $("modelo").addEventListener("input",calc);
@@ -977,6 +1247,27 @@ if($("dataAbertura") && !$("dataAbertura").value){
   const el2 = $("creditoExport"); if(el2) el2.textContent = txt;
 })();
 
+
+
+// ── ALTERNÂNCIA DE VISÃO: Noite x Rua ─────────────────────
+(function(){
+  const btnNoite = $("btnNoite");
+  const btnRua = $("btnRua");
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  function aplicar(modo){
+    const rua = modo === "rua";
+    document.body.classList.toggle("light-view", rua);
+    if(btnNoite) btnNoite.classList.toggle("active", !rua);
+    if(btnRua) btnRua.classList.toggle("active", rua);
+    if(metaTheme) metaTheme.setAttribute("content", rua ? "#eceff3" : "#04101e");
+    try{ localStorage.setItem("maedina-visao", rua ? "rua" : "noite"); }catch(e){}
+  }
+  let salvo = "noite";
+  try{ salvo = localStorage.getItem("maedina-visao") || "noite"; }catch(e){}
+  aplicar(salvo);
+  if(btnNoite) btnNoite.addEventListener("click", () => aplicar("noite"));
+  if(btnRua) btnRua.addEventListener("click", () => aplicar("rua"));
+})();
 
 // ── SPLASH / CAPA INICIAL RESPONSIVA ─────────────────────
 (function(){
