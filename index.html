@@ -132,6 +132,7 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
 }
 .btn:hover{filter:brightness(1.07);}
 .btn:disabled{opacity:.6;cursor:wait;}
+.btn.secondary{background:linear-gradient(135deg,#25d7f3,#0ea5e9);color:#04101e;margin-top:6px;}
 
 /* TABELA DE PROJEÇÃO TEMPORAL */
 .cmp{width:100%;border-collapse:collapse;font-size:12px;}
@@ -504,6 +505,7 @@ body.light-view .cmp td.neg,
 body.light-view .deadline-val.bad,
 body.light-view .card.rd .c-val{color:#dc2626!important;}
 body.light-view .btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#111827;}
+body.light-view .btn.secondary{background:linear-gradient(135deg,#0284c7,#0369a1);color:#ffffff;}
 body.light-view .view-btn.active{background:#d97706;color:#ffffff;}
 @media (max-width:960px){
   .view-toggle{margin-left:auto;}
@@ -528,6 +530,50 @@ body.light-view .view-btn.active{background:#d97706;color:#ffffff;}
   border:1px solid rgba(255,255,255,.08);border-radius:10px;
   background:rgba(13,39,68,.4);color:#8fa8c0;font-size:11px;line-height:1.4;}
 .exp-credito{text-align:right;font-size:9px;color:rgba(122,154,184,.6);margin-top:6px;}
+
+
+/* ALTERNÂNCIA OPERACIONAL — GESTOR x AVALIADOR PÁTIO */
+.role-toggle{
+  margin-left:8px;display:flex;align-items:center;gap:4px;
+  border:1px solid rgba(255,255,255,.16);border-radius:999px;
+  background:rgba(8,12,22,.92);padding:4px;flex:0 0 auto;
+}
+.role-btn{
+  height:34px;border:0;border-radius:999px;padding:0 14px;
+  background:transparent;color:#8fa8c0;font-size:12px;font-weight:950;
+  text-transform:uppercase;letter-spacing:.4px;cursor:pointer;white-space:nowrap;
+}
+.role-btn.active{background:#25d7f3;color:#04101e;box-shadow:0 0 0 1px rgba(37,215,243,.25);}
+body.light-view .role-toggle{background:#ffffff;border-color:#c7d2da;}
+body.light-view .role-btn{color:#475569;}
+body.light-view .role-btn.active{background:#0284c7;color:#ffffff;}
+body.patio-role .right,
+body.patio-role .gestor-only{display:none!important;}
+body.patio-role .body{grid-template-columns:minmax(320px,560px);justify-content:center;}
+body.patio-role .left{border-right:0;width:100%;max-width:560px;margin:0 auto;padding-top:14px;}
+body.patio-role .left .blk{padding:14px 16px;}
+body.patio-role .left input[type="text"],
+body.patio-role .left input[type="number"],
+body.patio-role .left input[type="date"],
+body.patio-role .left select{height:42px;font-size:15px;}
+body.patio-role #htmlBtn{height:46px;font-size:15px;margin-top:4px;background:linear-gradient(135deg,#25d7f3,#0891b2);}
+body.patio-role .radio-pill, body.patio-role .class-box{min-height:44px;display:flex;align-items:center;justify-content:center;}
+body.patio-role::after{
+  content:"Modo Avaliador Pátio: lançar dados do veículo e exportar HTML para análise do gestor.";
+  position:fixed;right:14px;bottom:12px;z-index:20;
+  max-width:min(520px,calc(100vw - 28px));
+  padding:8px 12px;border-radius:9px;
+  border:1px solid rgba(37,215,243,.35);background:rgba(2,8,18,.88);
+  color:#8fa8c0;font:800 11px Arial,Helvetica,sans-serif;
+}
+body.light-view.patio-role::after{background:#fff;color:#475569;border-color:#c7d2da;}
+@media (max-width:900px){
+  .role-toggle{order:4;width:100%;margin-left:0;justify-content:center;}
+  .role-btn{flex:1;padding:0 8px;font-size:11px;}
+  body.patio-role .body{display:block;}
+  body.patio-role .left{max-width:none;padding:8px 10px;}
+  body.patio-role::after{position:static;display:block;margin:8px 10px 12px;text-align:center;}
+}
 
 .admin-hidden{display:none!important;}
 
@@ -702,9 +748,9 @@ body.light-view .class-box.active{
     <div class="topbar-title">MAE-DINA</div>
     <div class="topbar-sub">Simulador de Avaliação, Margem e Depreciação</div>
   </div>
-  <div class="view-toggle" aria-label="Alternar visão">
-    <button type="button" class="view-btn active" id="btnNoite">Modo Analítico</button>
-    <button type="button" class="view-btn" id="btnRua">Modo Pátio</button>
+  <div class="role-toggle" aria-label="Alternar painel operacional">
+    <button type="button" class="role-btn active" id="btnGestor">Gestor</button>
+    <button type="button" class="role-btn" id="btnAvaliador">Avaliador Pátio</button>
   </div>
 </div>
 
@@ -781,7 +827,7 @@ body.light-view .class-box.active{
     </div>
 
     <!-- GESTOR SM + FIPE -->
-    <div class="blk ciano-blk">
+    <div class="blk ciano-blk gestor-only">
       <div class="g2">
         <div class="field">
           <label>Gestor SM (R$)</label>
@@ -795,7 +841,7 @@ body.light-view .class-box.active{
     </div>
 
     <!-- AAV B2C + KBB LOJA -->
-    <div class="blk">
+    <div class="blk gestor-only">
       <div class="g2">
         <div class="field">
           <label>AAV B2C (R$)</label>
@@ -809,7 +855,7 @@ body.light-view .class-box.active{
     </div>
 
     <!-- REPASSE SM + AAV B2B -->
-    <div class="blk">
+    <div class="blk gestor-only">
       <div class="g2">
         <div class="field">
           <label>Repasse SM (R$)</label>
@@ -823,7 +869,7 @@ body.light-view .class-box.active{
     </div>
 
     <!-- STATUS -->
-    <div class="status" id="sBar">
+    <div class="status gestor-only" id="sBar">
       <div class="status-txt" id="sTxt">Preencha os campos de avaliação</div>
       <span id="sIco">—</span>
     </div>
@@ -835,8 +881,9 @@ body.light-view .class-box.active{
     <input id="kitRafael" type="hidden" value="">
     <input id="taxaJuros" type="hidden" value="">
 
-    <!-- BOTÃO DOWNLOAD -->
-    <button class="btn" id="dlBtn">⬇ Baixar imagem</button>
+    <!-- BOTÕES DOWNLOAD -->
+    <button class="btn gestor-only" id="dlBtn">⬇ Baixar imagem</button>
+    <button class="btn secondary" id="htmlBtn">💾 Exportar HTML salvo</button>
 
   </div>
   <!-- DIREITO -->
@@ -1227,11 +1274,121 @@ async function download(){
       useCORS:true,allowTaint:true,logging:false});
     const a=document.createElement("a");
     a.href=c.toDataURL("image/png",1);
-    a.download=`mae-dina-${fileSafe($("modelo").value||"veiculo")}.png`;
+    const modeloFile = fileSafe($("modelo").value || "veiculo");
+    const placaFile = fileSafe(($("placa").value || "sem-placa").toUpperCase());
+    a.download=`mae-dina-${modeloFile}-${placaFile}.png`;
     document.body.appendChild(a);a.click();document.body.removeChild(a);
   }catch(e){alert("Erro ao gerar imagem.");console.error(e);}
   finally{btn.disabled=false;btn.textContent="⬇ Baixar imagem";}
 }
+
+function dataHoraArquivo(d){
+  const dd=String(d.getDate()).padStart(2,"0");
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const yy=d.getFullYear();
+  const hh=String(d.getHours()).padStart(2,"0");
+  const mi=String(d.getMinutes()).padStart(2,"0");
+  return {br:`${dd}/${mm}/${yy} às ${hh}:${mi}`, file:`${yy}${mm}${dd}-${hh}${mi}`};
+}
+
+function exportHtmlSalvo(){
+  const btn=$("htmlBtn");
+  const agora=new Date();
+  const dh=dataHoraArquivo(agora);
+  if(btn){btn.disabled=true;btn.textContent="Gravando HTML...";}
+  try{
+    calc();
+    const clone=document.documentElement.cloneNode(true);
+
+    // Grava valores atuais dos campos no HTML exportado.
+    document.querySelectorAll("input, select, textarea").forEach(el=>{
+      if(!el.id) return;
+      const c=clone.querySelector(`#${CSS.escape(el.id)}`);
+      if(!c) return;
+      const tag=el.tagName.toLowerCase();
+      const type=(el.getAttribute("type")||"").toLowerCase();
+      if(type==="checkbox" || type==="radio"){
+        if(el.checked) c.setAttribute("checked","checked");
+        else c.removeAttribute("checked");
+      } else if(tag==="select"){
+        Array.from(c.options).forEach(opt=>{
+          if(opt.value===el.value) opt.setAttribute("selected","selected");
+          else opt.removeAttribute("selected");
+        });
+      } else if(tag==="textarea"){
+        c.textContent=el.value;
+      } else {
+        c.setAttribute("value",el.value||"");
+      }
+    });
+
+    // Mantém classes visuais marcadas no momento da gravação.
+    const cloneBody=clone.querySelector("body");
+    if(cloneBody) cloneBody.className=document.body.className;
+    clone.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn").forEach((c,i)=>{
+      const atual=document.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn")[i];
+      if(atual) c.className=atual.className;
+    });
+
+    // Remove splash do arquivo salvo para o gestor abrir direto na avaliação.
+    const splash=clone.querySelector("#appSplash");
+    if(splash) splash.remove();
+
+    // Selo visível da gravação.
+    const stamp=clone.ownerDocument.createElement("div");
+    stamp.id="registroGravacaoHtml";
+    stamp.setAttribute("style","padding:8px 14px;background:rgba(37,215,243,.10);border-bottom:1px solid rgba(37,215,243,.35);font:700 12px Arial;color:#25d7f3;text-align:right;");
+    const modelo=($("modelo")?.value||"Veículo").trim();
+    const placa=($("placa")?.value||"Sem placa").trim().toUpperCase();
+    stamp.textContent=`Arquivo HTML gravado em ${dh.br} · ${modelo} · ${placa}`;
+    const top=clone.querySelector(".topbar");
+    if(top && top.parentNode) top.parentNode.insertBefore(stamp, top.nextSibling);
+    else if(cloneBody) cloneBody.insertBefore(stamp, cloneBody.firstChild);
+
+    // Força o modo visual salvo e recalcula ao abrir, sem depender do localStorage do computador do gestor.
+    const modoRua=document.body.classList.contains("light-view");
+    const modoPatio=document.body.classList.contains("patio-role");
+    const script=clone.ownerDocument.createElement("script");
+    script.textContent=`(function(){\n  try{localStorage.setItem("maedina-visao","${modoRua?"rua":"noite"}");localStorage.setItem("maedina-papel","${modoPatio?"patio":"gestor"}");}catch(e){}\n  document.body.classList.toggle("light-view", ${modoRua});\n  document.body.classList.toggle("patio-role", ${modoPatio});\n  const bn=document.getElementById("btnNoite"), br=document.getElementById("btnRua"), bg=document.getElementById("btnGestor"), ba=document.getElementById("btnAvaliador");\n  if(bn) bn.classList.toggle("active", ${!modoRua});\n  if(br) br.classList.toggle("active", ${modoRua});\n  if(bg) bg.classList.toggle("active", ${!modoPatio});\n  if(ba) ba.classList.toggle("active", ${modoPatio});\n  if(typeof calc==="function") calc();\n})();`;
+    if(cloneBody) cloneBody.appendChild(script);
+
+    let html="<!DOCTYPE html>\n"+clone.outerHTML;
+    const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+    const a=document.createElement("a");
+    const modeloFile=fileSafe($("modelo")?.value||"veiculo") || "veiculo";
+    const placaFile=fileSafe($("placa")?.value||"sem-placa") || "sem-placa";
+    a.href=URL.createObjectURL(blob);
+    a.download=`mae-dina-${modeloFile}-${placaFile}-${dh.file}.html`;
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+    document.body.removeChild(a);
+  }catch(e){alert("Erro ao exportar HTML salvo.");console.error(e);}
+  finally{if(btn){btn.disabled=false;btn.textContent="💾 Exportar HTML salvo";}}
+}
+
+
+function dadosCompartilhamento(){
+  calc();
+  const agora = new Date();
+  const dh = dataHoraArquivo(agora);
+  const modelo = ($("modelo")?.value || "Veículo").trim();
+  const placa = (($("placa")?.value || "Sem placa").trim()).toUpperCase();
+  const avaliacao = ($("avaliacao")?.value || "").trim();
+  const abertura = $("dataAbertura")?.value ? fmtData(parseDateInput($("dataAbertura").value)) : fmtData(new Date());
+  const nomeArquivo = `mae-dina-${fileSafe(modelo || "veiculo")}-${fileSafe(placa || "sem-placa")}-${dh.file}.html`;
+  const assunto = `Avaliação MAE-DINA - ${modelo} - ${placa}`;
+  const linhas = [
+    `Segue avaliação MAE-DINA do veículo ${modelo}, placa ${placa}.`,
+    avaliacao ? `Avaliação informada: R$ ${avaliacao}.` : "",
+    `Data de abertura: ${abertura}.`,
+    `Arquivo HTML gerado em ${dh.br}.`,
+    `Nome sugerido do arquivo: ${nomeArquivo}.`,
+    "",
+    "Anexe o arquivo HTML salvo nesta mensagem para o gestor abrir, alterar e exportar novamente."
+  ].filter(Boolean);
+  return {modelo, placa, dh, nomeArquivo, assunto, corpo: linhas.join("\n")};
+}
+
 
 // ── TOOLTIP LOGO ─────────────────────────────────────────
 (function(){
@@ -1310,6 +1467,7 @@ $("taxaJuros").addEventListener("input",calc);
 $("modelo").addEventListener("input",calc);
 $("dataAbertura").addEventListener("change",calc);
 $("dlBtn").addEventListener("click",download);
+if($("htmlBtn")) $("htmlBtn").addEventListener("click",exportHtmlSalvo);
 
 if($("dataAbertura") && !$("dataAbertura").value){
   $("dataAbertura").value = isoLocalDate(new Date());
@@ -1325,24 +1483,31 @@ if($("dataAbertura") && !$("dataAbertura").value){
 
 
 
-// ── ALTERNÂNCIA DE VISÃO: Noite x Rua ─────────────────────
+// Visão fixa: Noturna (sem alternância de cores)
 (function(){
-  const btnNoite = $("btnNoite");
-  const btnRua = $("btnRua");
+  document.body.classList.remove("light-view");
+  try{ localStorage.setItem("maedina-visao", "noite"); }catch(e){}
   const metaTheme = document.querySelector('meta[name="theme-color"]');
-  function aplicar(modo){
-    const rua = modo === "rua";
-    document.body.classList.toggle("light-view", rua);
-    if(btnNoite) btnNoite.classList.toggle("active", !rua);
-    if(btnRua) btnRua.classList.toggle("active", rua);
-    if(metaTheme) metaTheme.setAttribute("content", rua ? "#eceff3" : "#04101e");
-    try{ localStorage.setItem("maedina-visao", rua ? "rua" : "noite"); }catch(e){}
+  if(metaTheme) metaTheme.setAttribute("content", "#04101e");
+})();
+
+// ── ALTERNÂNCIA DE PAINEL: Gestor x Avaliador Pátio ───────
+(function(){
+  const btnGestor = $("btnGestor");
+  const btnAvaliador = $("btnAvaliador");
+  function aplicar(papel){
+    const patio = papel === "patio";
+    document.body.classList.toggle("patio-role", patio);
+    if(btnGestor) btnGestor.classList.toggle("active", !patio);
+    if(btnAvaliador) btnAvaliador.classList.toggle("active", patio);
+    try{ localStorage.setItem("maedina-papel", patio ? "patio" : "gestor"); }catch(e){}
+    if(typeof calc === "function") calc();
   }
-  let salvo = "noite";
-  try{ salvo = localStorage.getItem("maedina-visao") || "noite"; }catch(e){}
+  let salvo = "gestor";
+  try{ salvo = localStorage.getItem("maedina-papel") || "gestor"; }catch(e){}
   aplicar(salvo);
-  if(btnNoite) btnNoite.addEventListener("click", () => aplicar("noite"));
-  if(btnRua) btnRua.addEventListener("click", () => aplicar("rua"));
+  if(btnGestor) btnGestor.addEventListener("click", () => aplicar("gestor"));
+  if(btnAvaliador) btnAvaliador.addEventListener("click", () => aplicar("patio"));
 })();
 
 // ── SPLASH / CAPA INICIAL RESPONSIVA ─────────────────────
