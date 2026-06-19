@@ -247,6 +247,40 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
   border-color:#ffd700;color:#ffd700;
 }
 
+
+/* CORES BASE EXCEL MAE-DINA */
+.excel-resumo{
+  width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);border-radius:10px;
+  font-variant-numeric:tabular-nums;background:rgba(8,22,42,.75);
+}
+.excel-resumo td{
+  padding:11px 14px;border-bottom:1px solid rgba(4,16,30,.45);
+  font-size:14px;font-weight:950;color:#04101e;text-align:right;
+}
+.excel-resumo tr:last-child td{border-bottom:0;}
+.excel-resumo td:first-child{text-align:left;letter-spacing:.1px;}
+.excel-resumo .row-avaliacao td{background:#d9d9d9;}
+.excel-resumo .row-showroom td{background:#d9ead3;}
+.excel-resumo .row-repasse td{background:#ffff00;}
+.excel-resumo .resumo-pct{width:86px;}
+.cmp th:nth-child(3),.cmp td:nth-child(3){
+  background:rgba(217,234,211,.14);
+  border-left:1px solid rgba(217,234,211,.22);
+  border-right:1px solid rgba(217,234,211,.14);
+}
+.cmp th:nth-child(4),.cmp td:nth-child(4){
+  background:rgba(255,255,0,.15);
+  border-left:1px solid rgba(255,255,0,.22);
+}
+.cmp th:nth-child(3){color:#22d47e;}
+.cmp th:nth-child(4){color:#ffd700;}
+body.light-view .excel-resumo{border-color:#1f2937;background:#ffffff;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+body.light-view .excel-resumo td{color:#111827;border-bottom-color:#9ca3af;}
+body.light-view .cmp th:nth-child(3),body.light-view .cmp td:nth-child(3){background:#d9ead3;color:#111827;}
+body.light-view .cmp th:nth-child(4),body.light-view .cmp td:nth-child(4){background:#ffff00;color:#111827;}
+@media (max-width:960px){.excel-resumo td{font-size:13px;padding:10px 10px;}.excel-resumo .resumo-pct{width:74px;}}
+
 /* DATA FIXA NO PAINEL DIREITO */
 .data-fixa{
   display:flex;align-items:center;justify-content:space-between;
@@ -774,6 +808,26 @@ body.light-view .class-box.active{
       </div>
     </div>
 
+    <!-- INTERESSE DO CLIENTE -->
+    <div class="blk ciano-blk">
+      <div class="blk-title">Interesse do Cliente</div>
+      <div class="g2">
+        <div class="field">
+          <label>Modelo de Interesse</label>
+          <input id="modeloInteresse" type="text" placeholder="Ex: Pulse">
+        </div>
+        <div class="field">
+          <label>Modalidade</label>
+          <select id="modalidadeInteresse">
+            <option value="">Selecione</option>
+            <option value="Zero KM">Zero KM</option>
+            <option value="Seminovo">Seminovo</option>
+            <option value="Venda Direta">Venda Direta</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <!-- AVALIAÇÃO + REPARO -->
     <div class="blk flex-blk">
       <div class="g2">
@@ -788,17 +842,39 @@ body.light-view .class-box.active{
       </div>
     </div>
 
-    <!-- VLR SUGERIDO AAV + KM -->
+    <!-- AAV AVALIADOR + KM -->
     <div class="blk">
       <div class="g2">
         <div class="field">
-          <label>Vlr sugerido p/ AutoAvaliar (R$)</label>
-          <input id="vlrSugAAV" type="text" inputmode="numeric" placeholder="Ex: 86.000">
+          <label>AAV Avaliador (R$)</label>
+          <input id="vlrSugAAV" type="text" inputmode="numeric" placeholder="Ex: 85.500">
         </div>
         <div class="field">
           <label>KM</label>
           <input id="km" type="text" inputmode="numeric" placeholder="Ex: 120000">
         </div>
+      </div>
+    </div>
+
+    <!-- AAV B2B + AAV B2C PARA LANÇAMENTO DO AVALIADOR -->
+    <div class="blk flex-blk">
+      <div class="g2">
+        <div class="field">
+          <label>AAV B2B Repasse (R$)</label>
+          <input id="aavRepasse" type="text" inputmode="numeric" placeholder="Ex: 89.000">
+        </div>
+        <div class="field">
+          <label>AAV B2C (R$)</label>
+          <input id="aavB2C" type="text" inputmode="numeric" placeholder="Ex: 99.000">
+        </div>
+      </div>
+    </div>
+
+    <!-- FIPE PARA LANÇAMENTO DO AVALIADOR -->
+    <div class="blk ciano-blk">
+      <div class="field">
+        <label>FIPE (R$)</label>
+        <input id="fipe" type="text" inputmode="numeric" placeholder="Ex: 100.000">
       </div>
     </div>
 
@@ -826,26 +902,12 @@ body.light-view .class-box.active{
       </div>
     </div>
 
-    <!-- GESTOR SM + FIPE -->
+    <!-- GESTOR SM + KBB LOJA -->
     <div class="blk ciano-blk gestor-only">
       <div class="g2">
         <div class="field">
-          <label>Gestor SM (R$)</label>
+          <label>Gestor SM / Showroom (R$)</label>
           <input id="smShowroom" type="text" inputmode="numeric" placeholder="Ex: 102.000">
-        </div>
-        <div class="field">
-          <label>FIPE (R$)</label>
-          <input id="fipe" type="text" inputmode="numeric" placeholder="Ex: 100.000">
-        </div>
-      </div>
-    </div>
-
-    <!-- AAV B2C + KBB LOJA -->
-    <div class="blk gestor-only">
-      <div class="g2">
-        <div class="field">
-          <label>AAV B2C (R$)</label>
-          <input id="aavB2C" type="text" inputmode="numeric" placeholder="Ex: 98.000">
         </div>
         <div class="field">
           <label>KBB Loja (R$)</label>
@@ -854,17 +916,11 @@ body.light-view .class-box.active{
       </div>
     </div>
 
-    <!-- REPASSE SM + AAV B2B -->
+    <!-- REPASSE SM -->
     <div class="blk gestor-only">
-      <div class="g2">
-        <div class="field">
-          <label>Repasse SM (R$)</label>
-          <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
-        </div>
-        <div class="field">
-          <label>AAV B2B (R$)</label>
-          <input id="aavRepasse" type="text" inputmode="numeric" placeholder="Ex: 88.000">
-        </div>
+      <div class="field">
+        <label>San Marino Repasse (R$)</label>
+        <input id="smRepasse" type="text" inputmode="numeric" placeholder="Ex: 90.000">
       </div>
     </div>
 
@@ -894,6 +950,15 @@ body.light-view .class-box.active{
       <span class="data-fixa-lbl">Data de Abertura</span>
       <input id="dataAbertura" type="date" class="data-fixa-input" aria-label="Data de Abertura">
     </div>
+
+    <!-- RESUMO EXCEL MAE-DINA -->
+    <table class="excel-resumo" aria-label="Resumo de médias">
+      <tbody>
+        <tr class="row-avaliacao"><td>Média Avaliação</td><td id="resMediaAvaliacao">—</td><td class="resumo-pct" id="resPctAvaliacao">—</td></tr>
+        <tr class="row-showroom"><td>Média Showroom</td><td id="resMediaShowroom">—</td><td class="resumo-pct" id="resPctShowroom">—</td></tr>
+        <tr class="row-repasse"><td>Média Repasse</td><td id="resMediaRepasse">—</td><td class="resumo-pct" id="resPctRepasse">—</td></tr>
+      </tbody>
+    </table>
 
     <!-- DEADLINES -->
     <div class="sec-title yl">Prazos Limite (Deadlines)</div>
@@ -952,6 +1017,13 @@ body.light-view .class-box.active{
         <div id="expSum" class="exp-sub">—</div>
       </div>
     </div>
+    <table class="excel-resumo" style="margin-bottom:12px;">
+      <tbody>
+        <tr class="row-avaliacao"><td>Média Avaliação</td><td id="eresMediaAvaliacao">—</td><td class="resumo-pct" id="eresPctAvaliacao">—</td></tr>
+        <tr class="row-showroom"><td>Média Showroom</td><td id="eresMediaShowroom">—</td><td class="resumo-pct" id="eresPctShowroom">—</td></tr>
+        <tr class="row-repasse"><td>Média Repasse</td><td id="eresMediaRepasse">—</td><td class="resumo-pct" id="eresPctRepasse">—</td></tr>
+      </tbody>
+    </table>
     <table class="cmp" style="margin-bottom:12px;">
       <thead><tr>
         <th>Prazo</th><th>Data</th><th>Margem Showroom</th><th>Margem Repasse</th>
@@ -1065,6 +1137,10 @@ function brR(v){
     minimumFractionDigits:0, maximumFractionDigits:0
   });
 }
+function brPct(v){
+  if(v===null||v===undefined||!isFinite(v)) return "—";
+  return (v*100).toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}) + "%";
+}
 function fmtData(d){
   return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
 }
@@ -1134,12 +1210,31 @@ function calc(){
 
   const mediaShowroom = valsShow.length ? valsShow.reduce((a,b)=>a+b,0) / valsShow.length : 0;
   const mediaRepasse  = valsRep.length  ? valsRep.reduce((a,b)=>a+b,0)  / valsRep.length  : 0;
+  const valsAvaliacao = [avaliacao, vlrSugAAV].filter(v => v > 0);
+  const mediaAvaliacao = valsAvaliacao.length ? valsAvaliacao.reduce((a,b)=>a+b,0) / valsAvaliacao.length : 0;
 
   const temShowroomInputs = valsShow.length > 0;
   const temRepasseInputs  = valsRep.length > 0;
+  const temMediaAvaliacao = valsAvaliacao.length > 0;
 
   $("mediaShowroom").value = temShowroomInputs ? brR(mediaShowroom) : "";
   $("mediaRepasse").value  = temRepasseInputs  ? brR(mediaRepasse)  : "";
+
+  const pctAvaliacao = mediaAvaliacao > 0 ? (avaliacao - mediaAvaliacao) / mediaAvaliacao : null;
+  const pctShowroom  = mediaShowroom  > 0 ? (mediaShowroom - avaliacao) / mediaShowroom : null;
+  const pctRepasse   = mediaRepasse   > 0 ? (mediaRepasse - avaliacao) / mediaRepasse : null;
+  setText("resMediaAvaliacao", temMediaAvaliacao ? brR(mediaAvaliacao) : "—");
+  setText("resPctAvaliacao", temMediaAvaliacao ? brPct(pctAvaliacao) : "—");
+  setText("resMediaShowroom", temShowroomInputs ? brR(mediaShowroom) : "—");
+  setText("resPctShowroom", temShowroomInputs ? brPct(pctShowroom) : "—");
+  setText("resMediaRepasse", temRepasseInputs ? brR(mediaRepasse) : "—");
+  setText("resPctRepasse", temRepasseInputs ? brPct(pctRepasse) : "—");
+  setText("eresMediaAvaliacao", temMediaAvaliacao ? brR(mediaAvaliacao) : "—");
+  setText("eresPctAvaliacao", temMediaAvaliacao ? brPct(pctAvaliacao) : "—");
+  setText("eresMediaShowroom", temShowroomInputs ? brR(mediaShowroom) : "—");
+  setText("eresPctShowroom", temShowroomInputs ? brPct(pctShowroom) : "—");
+  setText("eresMediaRepasse", temRepasseInputs ? brR(mediaRepasse) : "—");
+  setText("eresPctRepasse", temRepasseInputs ? brPct(pctRepasse) : "—");
 
   // ── VALIDAÇÃO OPERACIONAL ────────────────────────────────
   const camposOk = avaliacao>0 && (temShowroomInputs || temRepasseInputs);
@@ -1260,8 +1355,11 @@ function calc(){
 
   const modeloTxt = $("modelo").value || "Veículo";
   const placaTxt  = ($("placa").value || "").toUpperCase();
+  const interesseTxt = ($("modeloInteresse")?.value || "").trim();
+  const modalidadeTxt = ($("modalidadeInteresse")?.value || "").trim();
   const headerVeic = placaTxt ? `${modeloTxt} • ${placaTxt}` : modeloTxt;
-  $("expSum").textContent = `${headerVeic} | Avaliação ${brR(avaliacao)} | Abertura ${fmtData(F2)}`;
+  const dadosInteresse = [interesseTxt ? `Interesse ${interesseTxt}` : "", modalidadeTxt ? `Modalidade ${modalidadeTxt}` : ""].filter(Boolean).join(" | ");
+  $("expSum").textContent = `${headerVeic} | ${dadosInteresse ? dadosInteresse + " | " : ""}Avaliação ${brR(avaliacao)} | Abertura ${fmtData(F2)}`;
 }
 
 async function download(){
@@ -1373,12 +1471,16 @@ function dadosCompartilhamento(){
   const dh = dataHoraArquivo(agora);
   const modelo = ($("modelo")?.value || "Veículo").trim();
   const placa = (($("placa")?.value || "Sem placa").trim()).toUpperCase();
+  const interesse = ($("modeloInteresse")?.value || "").trim();
+  const modalidade = ($("modalidadeInteresse")?.value || "").trim();
   const avaliacao = ($("avaliacao")?.value || "").trim();
   const abertura = $("dataAbertura")?.value ? fmtData(parseDateInput($("dataAbertura").value)) : fmtData(new Date());
   const nomeArquivo = `mae-dina-${fileSafe(modelo || "veiculo")}-${fileSafe(placa || "sem-placa")}-${dh.file}.html`;
   const assunto = `Avaliação MAE-DINA - ${modelo} - ${placa}`;
   const linhas = [
     `Segue avaliação MAE-DINA do veículo ${modelo}, placa ${placa}.`,
+    interesse ? `Modelo de interesse: ${interesse}.` : "",
+    modalidade ? `Modalidade: ${modalidade}.` : "",
     avaliacao ? `Avaliação informada: R$ ${avaliacao}.` : "",
     `Data de abertura: ${abertura}.`,
     `Arquivo HTML gerado em ${dh.br}.`,
@@ -1465,6 +1567,8 @@ function bindMoeda(id){
 
 $("taxaJuros").addEventListener("input",calc);
 $("modelo").addEventListener("input",calc);
+if($("modeloInteresse")) $("modeloInteresse").addEventListener("input",calc);
+if($("modalidadeInteresse")) $("modalidadeInteresse").addEventListener("change",calc);
 $("dataAbertura").addEventListener("change",calc);
 $("dlBtn").addEventListener("click",download);
 if($("htmlBtn")) $("htmlBtn").addEventListener("click",exportHtmlSalvo);
