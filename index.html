@@ -760,6 +760,54 @@ body.light-view .class-box.active{
   .topbar-sub{display:none!important;}
 }
 
+/* PORTAL ONLINE */
+.portal-panel{
+  margin-top:8px;border:1px solid rgba(37,215,243,.22);border-radius:10px;
+  background:linear-gradient(135deg,rgba(37,215,243,.06),rgba(8,22,42,.82));
+  padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0;
+}
+.portal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;}
+.portal-title{font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.9px;color:#25d7f3;white-space:nowrap;}
+.portal-chip{font-size:9px;font-weight:900;color:#9db7d2;background:rgba(255,255,255,.06);border-radius:999px;padding:4px 8px;white-space:nowrap;}
+.portal-row{display:grid;grid-template-columns:1fr;gap:7px;min-width:0;}
+.portal-row.two{grid-template-columns:1fr;}
+.portal-panel input{
+  min-height:36px;border:1px solid rgba(255,255,255,.14);border-radius:7px;
+  background:rgba(2,8,18,.92);color:#f0f4ff;padding:0 9px;font-size:12px;font-weight:800;min-width:0;
+}
+.portal-btn{
+  width:100%;min-height:38px;border:0;border-radius:7px;background:linear-gradient(135deg,#25d7f3,#1787bc);
+  color:#04101e;font-size:12px;font-weight:950;cursor:pointer;line-height:1.15;
+  white-space:normal;overflow-wrap:anywhere;padding:8px 10px;text-align:center;
+}
+.portal-btn.subtle{background:rgba(255,255,255,.08);color:#dbeafe;border:1px solid rgba(255,255,255,.13);}
+.portal-btn.xls{background:linear-gradient(135deg,#22d47e,#16a34a);color:#03140a;}
+.portal-btn:disabled{opacity:.62;cursor:wait;}
+.portal-status{min-height:15px;font-size:10px;font-weight:800;color:#9db7d2;line-height:1.3;overflow-wrap:anywhere;}
+.portal-status.ok{color:#22d47e;}
+.portal-status.bad{color:#f05252;}
+.portal-actions{display:none;flex-direction:column;gap:7px;min-width:0;}
+.portal-user{font-size:10px;font-weight:850;color:#dbeafe;line-height:1.3;overflow-wrap:anywhere;}
+.portal-link{font-size:9px;color:#9db7d2;word-break:break-all;line-height:1.25;}
+.portal-list{
+  display:none;max-height:240px;overflow:auto;border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;background:rgba(2,8,18,.58);min-width:0;
+}
+.portal-item{
+  width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.07);
+  background:transparent;color:#dbeafe;text-align:left;padding:9px;cursor:pointer;
+}
+.portal-item:last-child{border-bottom:0;}
+.portal-item:hover{background:rgba(37,215,243,.08);}
+.portal-item strong{display:block;font-size:11px;color:#f0f4ff;margin-bottom:3px;line-height:1.25;overflow-wrap:anywhere;}
+.portal-item span{display:block;font-size:9px;color:#9db7d2;line-height:1.3;overflow-wrap:anywhere;}
+.portal-empty{padding:9px;font-size:10px;font-weight:800;color:#9db7d2;}
+@media (min-width:980px){
+  .portal-row.two{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:520px){
+  .portal-panel{padding:8px;}
+}
 </style>
 </head>
 <body>
@@ -948,8 +996,6 @@ body.light-view .class-box.active{
 
     <!-- BOTÕES DOWNLOAD -->
     <button type="button" class="btn gestor-only" id="dlBtn">Baixar imagem PNG</button>
-    <button type="button" class="btn secondary" id="htmlBtn">Salvar HTML editável</button>
-    <button type="button" class="btn secondary" id="shareHtmlBtn">Enviar HTML editável</button>
     <div class="save-fallback" id="saveFallback" aria-live="polite"></div>
     <div class="portal-panel" id="portalPanel">
       <div class="portal-head">
@@ -957,18 +1003,25 @@ body.light-view .class-box.active{
         <div class="portal-chip" id="portalChip">desconectado</div>
       </div>
       <div class="portal-row" id="portalLogin">
-        <input id="portalEmail" type="email" autocomplete="username" placeholder="E-mail do usuÃ¡rio">
+        <input id="portalEmail" type="email" autocomplete="username" placeholder="E-mail do usu&aacute;rio">
         <input id="portalSenha" type="password" autocomplete="current-password" placeholder="Senha">
         <button type="button" class="portal-btn" id="portalLoginBtn">Entrar no portal</button>
       </div>
       <div class="portal-actions" id="portalActions">
         <div class="portal-user" id="portalUser"></div>
         <div class="portal-row two">
-          <button type="button" class="portal-btn" id="portalSaveBtn">Salvar avaliaÃ§Ã£o online</button>
-          <button type="button" class="portal-btn" id="portalCopyBtn">Copiar link da avaliaÃ§Ã£o</button>
+          <button type="button" class="portal-btn" id="portalSaveBtn">Salvar avalia&ccedil;&atilde;o online</button>
+          <button type="button" class="portal-btn" id="portalCopyBtn">Copiar link da avalia&ccedil;&atilde;o</button>
         </div>
-        <button type="button" class="portal-btn subtle" id="portalLogoutBtn">Sair do portal</button>
+        <div class="portal-row two">
+          <button type="button" class="portal-btn subtle" id="portalListBtn">Ver avalia&ccedil;&otilde;es salvas</button>
+          <button type="button" class="portal-btn xls" id="portalXlsBtn">Exportar XLS</button>
+        </div>
+        <div class="portal-row">
+          <button type="button" class="portal-btn subtle" id="portalLogoutBtn">Sair do portal</button>
+        </div>
         <div class="portal-link" id="portalLink"></div>
+        <div class="portal-list" id="portalList"></div>
       </div>
       <div class="portal-status" id="portalStatus" aria-live="polite"></div>
     </div>
@@ -1851,6 +1904,7 @@ if($("dataAbertura") && !$("dataAbertura").value){
   let portalPerfil = null;
   let avaliacaoAtual = null;
   let codigoPendente = "";
+  let portalAvaliacoesLista = [];
 
   const qs = (sel) => document.querySelector(sel);
   const byId = (id) => document.getElementById(id);
@@ -2031,6 +2085,86 @@ if($("dataAbertura") && !$("dataAbertura").value){
     });
     return rows && rows[0] ? rows[0] : null;
   }
+  async function listarAvaliacoes(){
+    if(!portalSession){ setStatus("Entre no portal para ver o historico.", "bad"); return; }
+    const btn = byId("portalListBtn");
+    const lista = byId("portalList");
+    setBusy(btn, true, "Carregando...");
+    try{
+      const rows = await request("/rest/v1/avaliacoes?select=id,codigo,placa,modelo,dados,criado_por_email,atualizado_em,criado_em&order=atualizado_em.desc&limit=200", {
+        headers: authHeaders()
+      });
+      portalAvaliacoesLista = rows || [];
+      if(!lista) return;
+      lista.style.display = "block";
+      if(!rows || !rows.length){
+        lista.innerHTML = '<div class="portal-empty">Nenhuma avaliacao salva ainda.</div>';
+        setStatus("Nenhuma avaliacao salva ainda.", "");
+        return;
+      }
+      lista.innerHTML = rows.map(row => {
+        const data = row.atualizado_em || row.criado_em || "";
+        const quando = data ? new Date(data).toLocaleString("pt-BR") : "sem data";
+        const titulo = [row.placa, row.modelo].filter(Boolean).join(" - ") || row.codigo;
+        return '<button type="button" class="portal-item" data-codigo="' + String(row.codigo || "").replace(/"/g,"&quot;") + '">' +
+          '<strong>' + escapeHtml(titulo) + '</strong>' +
+          '<span>Codigo: ' + escapeHtml(row.codigo || "-") + '</span>' +
+          '<span>Ultima alteracao: ' + escapeHtml(quando) + '</span>' +
+          '</button>';
+      }).join("");
+      lista.querySelectorAll(".portal-item").forEach(item => {
+        item.addEventListener("click", () => carregarAvaliacao(item.getAttribute("data-codigo") || ""));
+      });
+      setStatus("Historico carregado. Clique em uma avaliacao para abrir.", "ok");
+    }catch(e){
+      setStatus("Erro ao listar avaliacoes: " + e.message, "bad");
+    }finally{
+      setBusy(btn, false);
+    }
+  }
+  function escapeHtml(valor){
+    return String(valor == null ? "" : valor)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function valorXls(valor){
+    return String(valor == null ? "" : valor)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function exportarAvaliacoesXls(){
+    if(!portalAvaliacoesLista || !portalAvaliacoesLista.length){
+      setStatus("Clique em Ver avaliacoes salvas antes de exportar.", "bad");
+      return;
+    }
+    const campos = [
+      ["codigo","Codigo"],["placa","Placa"],["modelo","Veiculo"],["modeloInteresse","Modelo interesse"],
+      ["modalidadeInteresse","Modalidade"],["perfil","Perfil"],["classificacao","Classificacao"],
+      ["avaliacao","Avaliacao"],["reparo","Reparo"],["vlrSugAAV","Valor sugerido AAV"],["km","KM"],
+      ["aavRepasse","AAV repasse"],["aavB2C","AAV B2C"],["fipe","FIPE"],["smShowroom","San Marino showroom"],
+      ["kbbLoja","KBB loja"],["smRepasse","San Marino repasse"],["dataAbertura","Data abertura"],
+      ["salvoEm","Salvo em"],["criado_por_email","Criado por"],["atualizado_em","Atualizado em"]
+    ];
+    const linhas = portalAvaliacoesLista.map(row => {
+      const dados = row.dados || {};
+      return campos.map(([key]) => {
+        if(key === "codigo" || key === "placa" || key === "modelo" || key === "criado_por_email" || key === "atualizado_em") return row[key] || "";
+        return dados[key] || "";
+      });
+    });
+    const tabela = '<html><head><meta charset="UTF-8"></head><body><table border="1">' +
+      '<tr>' + campos.map(([,label]) => '<th>' + valorXls(label) + '</th>').join("") + '</tr>' +
+      linhas.map(linha => '<tr>' + linha.map(v => '<td>' + valorXls(v) + '</td>').join("") + '</tr>').join("") +
+      '</table></body></html>';
+    const blob = new Blob([tabela], { type:"application/vnd.ms-excel;charset=utf-8" });
+    const nome = "avaliacoes-mae-dina-" + new Date().toISOString().slice(0,10) + ".xls";
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = nome;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 700);
+    setStatus("XLS gerado com " + linhas.length + " avaliacoes.", "ok");
+  }
   async function carregarAvaliacao(codigo){
     if(!portalSession){ codigoPendente = codigo; setStatus("Entre no portal para carregar esta avaliacao.", "bad"); return; }
     setStatus("Carregando avaliacao do portal...", "");
@@ -2094,6 +2228,8 @@ if($("dataAbertura") && !$("dataAbertura").value){
       try{ localStorage.setItem(AVALIACAO_KEY, JSON.stringify({ id:avaliacaoAtual.id, codigo:avaliacaoAtual.codigo })); }catch(e){}
       atualizarUi();
       setStatus("Salvo online. Link pronto para enviar.", "ok");
+      const lista = byId("portalList");
+      if(lista && lista.style.display === "block") listarAvaliacoes();
     }catch(e){
       setStatus("Erro ao salvar: " + e.message, "bad");
     }finally{
@@ -2135,6 +2271,8 @@ if($("dataAbertura") && !$("dataAbertura").value){
     byId("portalLoginBtn")?.addEventListener("click", loginPortal);
     byId("portalSaveBtn")?.addEventListener("click", salvarPortal);
     byId("portalCopyBtn")?.addEventListener("click", copiarLink);
+    byId("portalListBtn")?.addEventListener("click", listarAvaliacoes);
+    byId("portalXlsBtn")?.addEventListener("click", exportarAvaliacoesXls);
     byId("portalLogoutBtn")?.addEventListener("click", sairPortal);
     atualizarUi();
     if(portalSession && portalSession.access_token){
