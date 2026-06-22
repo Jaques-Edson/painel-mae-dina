@@ -1509,7 +1509,10 @@ function montarHtmlSalvo(){
 
   aplicarSnapshotCampos(clone);
 
-  if(cloneBody) cloneBody.className=document.body.className;
+  if(cloneBody){
+    cloneBody.className=document.body.className;
+    cloneBody.classList.remove("patio-role");
+  }
   clone.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn").forEach((c,i)=>{
     const atual=document.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn")[i];
     if(atual) c.className=atual.className;
@@ -1521,7 +1524,7 @@ function montarHtmlSalvo(){
   inserirHistoricoNoClone(clone, historico);
 
   const modoRua=document.body.classList.contains("light-view");
-  const modoPatio=document.body.classList.contains("patio-role");
+  const modoPatio=false;
   clone.querySelectorAll("#maeDinaRestoreScript").forEach(el=>el.remove());
   const script=clone.ownerDocument.createElement("script");
   script.id="maeDinaRestoreScript";
