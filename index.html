@@ -565,6 +565,14 @@ body.light-view .view-btn.active{background:#d97706;color:#ffffff;}
   background:rgba(13,39,68,.4);color:#8fa8c0;font-size:11px;line-height:1.4;}
 .exp-credito{text-align:right;font-size:9px;color:rgba(122,154,184,.6);margin-top:6px;}
 
+.save-fallback{
+  display:none;margin:8px 12px 0;padding:10px 12px;border-radius:8px;
+  border:1px solid rgba(37,215,243,.35);background:rgba(37,215,243,.08);
+  color:#c8d8e8;font-size:12px;font-weight:800;line-height:1.35;
+}
+.save-fallback.show{display:block;}
+.save-fallback a{color:#25d7f3;font-weight:950;text-decoration:none;}
+
 
 /* ALTERNÂNCIA OPERACIONAL — GESTOR x AVALIADOR PÁTIO */
 .role-toggle{
@@ -590,7 +598,8 @@ body.patio-role .left input[type="text"],
 body.patio-role .left input[type="number"],
 body.patio-role .left input[type="date"],
 body.patio-role .left select{height:42px;font-size:15px;}
-body.patio-role #htmlBtn{height:46px;font-size:15px;margin-top:4px;background:linear-gradient(135deg,#25d7f3,#0891b2);}
+body.patio-role #htmlBtn,
+body.patio-role #shareHtmlBtn{height:46px;font-size:15px;margin-top:4px;background:linear-gradient(135deg,#25d7f3,#0891b2);}
 body.patio-role .radio-pill, body.patio-role .class-box{min-height:44px;display:flex;align-items:center;justify-content:center;}
 body.patio-role::after{
   content:"Modo Avaliador Pátio: lançar dados do veículo e exportar HTML para análise do gestor.";
@@ -938,8 +947,10 @@ body.light-view .class-box.active{
     <input id="taxaJuros" type="hidden" value="">
 
     <!-- BOTÕES DOWNLOAD -->
-    <button class="btn gestor-only" id="dlBtn">⬇ Baixar imagem</button>
-    <button class="btn secondary" id="htmlBtn">💾 Exportar HTML salvo</button>
+    <button type="button" class="btn gestor-only" id="dlBtn">Baixar imagem PNG</button>
+    <button type="button" class="btn secondary" id="htmlBtn">Salvar HTML editável</button>
+    <button type="button" class="btn secondary" id="shareHtmlBtn">Compartilhar HTML editável</button>
+    <div class="save-fallback" id="saveFallback" aria-live="polite"></div>
 
   </div>
   <!-- DIREITO -->
@@ -1386,85 +1397,200 @@ function dataHoraArquivo(d){
   const yy=d.getFullYear();
   const hh=String(d.getHours()).padStart(2,"0");
   const mi=String(d.getMinutes()).padStart(2,"0");
-  return {br:`${dd}/${mm}/${yy} às ${hh}:${mi}`, file:`${yy}${mm}${dd}-${hh}${mi}`};
+  const ss=String(d.getSeconds()).padStart(2,"0");
+  return {br:`${dd}/${mm}/${yy} as ${hh}:${mi}`, iso:d.toISOString(), file:`${yy}${mm}${dd}-${hh}${mi}${ss}`};
 }
 
-function exportHtmlSalvo(){
-  const btn=$("htmlBtn");
+function idSelector(id){
+  if(window.CSS && typeof CSS.escape==="function") return `#${CSS.escape(id)}`;
+  return "#"+String(id).split("").map(ch=>/[a-zA-Z0-9_-]/.test(ch)?ch:"\\"+ch).join("");
+}
+
+function historicoSalvamentos(doc=document){
+  const el=doc.getElementById("maeDinaHistoricoVersoes");
+  if(!el) return [];
+  try{
+    const dados=JSON.parse(el.textContent || "[]");
+    return Array.isArray(dados) ? dados.filter(Boolean) : [];
+  }catch(e){return [];}
+}
+
+function criarRegistroSalvamento(dh){
+  return {
+    data:dh.br,
+    iso:dh.iso,
+    modelo:(($("modelo")?.value || "Veiculo").trim()),
+    placa:((($("placa")?.value || "Sem placa").trim()).toUpperCase()),
+    papel:document.body.classList.contains("patio-role") ? "Avaliador patio" : "Gestor",
+    visao:document.body.classList.contains("light-view") ? "Rua" : "Noite"
+  };
+}
+
+function aplicarSnapshotCampos(clone){
+  document.querySelectorAll("input, select, textarea").forEach(el=>{
+    if(!el.id) return;
+    const c=clone.querySelector(idSelector(el.id));
+    if(!c) return;
+    const tag=el.tagName.toLowerCase();
+    const type=(el.getAttribute("type")||"").toLowerCase();
+    if(type==="checkbox" || type==="radio"){
+      c.checked=el.checked;
+      if(el.checked) c.setAttribute("checked","checked");
+      else c.removeAttribute("checked");
+    } else if(tag==="select"){
+      Array.from(c.options).forEach(opt=>{
+        const selected=opt.value===el.value;
+        opt.selected=selected;
+        if(selected) opt.setAttribute("selected","selected");
+        else opt.removeAttribute("selected");
+      });
+    } else if(tag==="textarea"){
+      c.value=el.value;
+      c.textContent=el.value;
+    } else {
+      c.value=el.value || "";
+      c.setAttribute("value",el.value || "");
+    }
+  });
+}
+
+function inserirHistoricoNoClone(clone, historico){
+  const cloneBody=clone.querySelector("body");
+  clone.querySelectorAll("#registroGravacaoHtml,#maeDinaHistoricoVersoes").forEach(el=>el.remove());
+
+  const data=clone.ownerDocument.createElement("script");
+  data.id="maeDinaHistoricoVersoes";
+  data.type="application/json";
+  data.textContent=JSON.stringify(historico).replace(/<\//g,"<\\/");
+  if(cloneBody) cloneBody.appendChild(data);
+
+  const ultimo=historico[historico.length-1];
+  if(!ultimo || !cloneBody) return;
+
+  const stamp=clone.ownerDocument.createElement("div");
+  stamp.id="registroGravacaoHtml";
+  stamp.setAttribute("style","padding:7px 14px;background:rgba(37,215,243,.08);border-bottom:1px solid rgba(37,215,243,.25);font:700 11px Arial;color:#25d7f3;text-align:right;");
+
+  const details=clone.ownerDocument.createElement("details");
+  details.setAttribute("style","display:inline-block;text-align:left;max-width:100%;");
+  const summary=clone.ownerDocument.createElement("summary");
+  summary.setAttribute("style","cursor:pointer;list-style:none;text-align:right;outline:none;");
+  summary.textContent=`HTML salvo em ${ultimo.data} - ${ultimo.modelo} - ${ultimo.placa}`;
+  details.appendChild(summary);
+
+  if(historico.length>1){
+    const lista=clone.ownerDocument.createElement("div");
+    lista.setAttribute("style","margin-top:5px;color:#8fa8c0;font-weight:700;font-size:10px;line-height:1.35;text-align:right;");
+    historico.slice(-8,-1).reverse().forEach((item,idx)=>{
+      const linha=clone.ownerDocument.createElement("div");
+      linha.textContent=`Versao anterior ${idx+1}: ${item.data} - ${item.papel || ""}`;
+      lista.appendChild(linha);
+    });
+    details.appendChild(lista);
+  }
+
+  stamp.appendChild(details);
+  const top=clone.querySelector(".topbar");
+  if(top && top.parentNode) top.parentNode.insertBefore(stamp, top.nextSibling);
+  else cloneBody.insertBefore(stamp, cloneBody.firstChild);
+}
+
+function montarHtmlSalvo(){
+  calc();
   const agora=new Date();
   const dh=dataHoraArquivo(agora);
-  if(btn){btn.disabled=true;btn.textContent="Gravando HTML...";}
-  try{
-    calc();
-    const clone=document.documentElement.cloneNode(true);
+  const registro=criarRegistroSalvamento(dh);
+  const historico=historicoSalvamentos().concat(registro).slice(-30);
+  const clone=document.documentElement.cloneNode(true);
+  const cloneBody=clone.querySelector("body");
 
-    // Grava valores atuais dos campos no HTML exportado.
-    document.querySelectorAll("input, select, textarea").forEach(el=>{
-      if(!el.id) return;
-      const c=clone.querySelector(`#${CSS.escape(el.id)}`);
-      if(!c) return;
-      const tag=el.tagName.toLowerCase();
-      const type=(el.getAttribute("type")||"").toLowerCase();
-      if(type==="checkbox" || type==="radio"){
-        if(el.checked) c.setAttribute("checked","checked");
-        else c.removeAttribute("checked");
-      } else if(tag==="select"){
-        Array.from(c.options).forEach(opt=>{
-          if(opt.value===el.value) opt.setAttribute("selected","selected");
-          else opt.removeAttribute("selected");
-        });
-      } else if(tag==="textarea"){
-        c.textContent=el.value;
-      } else {
-        c.setAttribute("value",el.value||"");
-      }
-    });
+  aplicarSnapshotCampos(clone);
 
-    // Mantém classes visuais marcadas no momento da gravação.
-    const cloneBody=clone.querySelector("body");
-    if(cloneBody) cloneBody.className=document.body.className;
-    clone.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn").forEach((c,i)=>{
-      const atual=document.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn")[i];
-      if(atual) c.className=atual.className;
-    });
+  if(cloneBody) cloneBody.className=document.body.className;
+  clone.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn").forEach((c,i)=>{
+    const atual=document.querySelectorAll("#perfilRow .radio-pill, #classRow .class-box, .view-btn, .role-btn")[i];
+    if(atual) c.className=atual.className;
+  });
 
-    // Remove splash do arquivo salvo para o gestor abrir direto na avaliação.
-    const splash=clone.querySelector("#appSplash");
-    if(splash) splash.remove();
+  const splash=clone.querySelector("#appSplash");
+  if(splash) splash.remove();
 
-    // Selo visível da gravação.
-    const stamp=clone.ownerDocument.createElement("div");
-    stamp.id="registroGravacaoHtml";
-    stamp.setAttribute("style","padding:8px 14px;background:rgba(37,215,243,.10);border-bottom:1px solid rgba(37,215,243,.35);font:700 12px Arial;color:#25d7f3;text-align:right;");
-    const modelo=($("modelo")?.value||"Veículo").trim();
-    const placa=($("placa")?.value||"Sem placa").trim().toUpperCase();
-    stamp.textContent=`Arquivo HTML gravado em ${dh.br} · ${modelo} · ${placa}`;
-    const top=clone.querySelector(".topbar");
-    if(top && top.parentNode) top.parentNode.insertBefore(stamp, top.nextSibling);
-    else if(cloneBody) cloneBody.insertBefore(stamp, cloneBody.firstChild);
+  inserirHistoricoNoClone(clone, historico);
 
-    // Força o modo visual salvo e recalcula ao abrir, sem depender do localStorage do computador do gestor.
-    const modoRua=document.body.classList.contains("light-view");
-    const modoPatio=document.body.classList.contains("patio-role");
-    const script=clone.ownerDocument.createElement("script");
-    script.textContent=`(function(){\n  try{localStorage.setItem("maedina-visao","${modoRua?"rua":"noite"}");localStorage.setItem("maedina-papel","${modoPatio?"patio":"gestor"}");}catch(e){}\n  document.body.classList.toggle("light-view", ${modoRua});\n  document.body.classList.toggle("patio-role", ${modoPatio});\n  const bn=document.getElementById("btnNoite"), br=document.getElementById("btnRua"), bg=document.getElementById("btnGestor"), ba=document.getElementById("btnAvaliador");\n  if(bn) bn.classList.toggle("active", ${!modoRua});\n  if(br) br.classList.toggle("active", ${modoRua});\n  if(bg) bg.classList.toggle("active", ${!modoPatio});\n  if(ba) ba.classList.toggle("active", ${modoPatio});\n  if(typeof calc==="function") calc();\n})();`;
-    if(cloneBody) cloneBody.appendChild(script);
+  const modoRua=document.body.classList.contains("light-view");
+  const modoPatio=document.body.classList.contains("patio-role");
+  clone.querySelectorAll("#maeDinaRestoreScript").forEach(el=>el.remove());
+  const script=clone.ownerDocument.createElement("script");
+  script.id="maeDinaRestoreScript";
+  script.textContent=`(function(){\n  try{localStorage.setItem("maedina-visao","${modoRua?"rua":"noite"}");localStorage.setItem("maedina-papel","${modoPatio?"patio":"gestor"}");}catch(e){}\n  document.body.classList.toggle("light-view", ${modoRua});\n  document.body.classList.toggle("patio-role", ${modoPatio});\n  const bn=document.getElementById("btnNoite"), br=document.getElementById("btnRua"), bg=document.getElementById("btnGestor"), ba=document.getElementById("btnAvaliador");\n  if(bn) bn.classList.toggle("active", ${!modoRua});\n  if(br) br.classList.toggle("active", ${modoRua});\n  if(bg) bg.classList.toggle("active", ${!modoPatio});\n  if(ba) ba.classList.toggle("active", ${modoPatio});\n  if(typeof calc==="function") calc();\n})();`;
+  if(cloneBody) cloneBody.appendChild(script);
 
-    let html="<!DOCTYPE html>\n"+clone.outerHTML;
-    const blob=new Blob([html],{type:"text/html;charset=utf-8"});
-    const a=document.createElement("a");
-    const modeloFile=fileSafe($("modelo")?.value||"veiculo") || "veiculo";
-    const placaFile=fileSafe($("placa")?.value||"sem-placa") || "sem-placa";
-    a.href=URL.createObjectURL(blob);
-    a.download=`mae-dina-${modeloFile}-${placaFile}-${dh.file}.html`;
-    document.body.appendChild(a);a.click();
-    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
-    document.body.removeChild(a);
-  }catch(e){alert("Erro ao exportar HTML salvo.");console.error(e);}
-  finally{if(btn){btn.disabled=false;btn.textContent="💾 Exportar HTML salvo";}}
+  const modeloFile=fileSafe($("modelo")?.value || "veiculo") || "veiculo";
+  const placaFile=fileSafe($("placa")?.value || "sem-placa") || "sem-placa";
+  return {
+    html:"<!DOCTYPE html>\n"+clone.outerHTML,
+    nomeArquivo:`mae-dina-${modeloFile}-${placaFile}-${dh.file}.html`,
+    registro,
+    historico
+  };
 }
 
+function mostrarFallbackDownload(url,nomeArquivo){
+  const box=$("saveFallback");
+  if(!box) return;
+  if(box.dataset.url) URL.revokeObjectURL(box.dataset.url);
+  box.dataset.url=url;
+  box.classList.add("show");
+  box.innerHTML=`Se o download nao aparecer, <a download="${nomeArquivo}" href="${url}">toque aqui para salvar o HTML</a>.`;
+  clearTimeout(mostrarFallbackDownload.timer);
+  mostrarFallbackDownload.timer=setTimeout(()=>{
+    if(box.dataset.url) URL.revokeObjectURL(box.dataset.url);
+    box.dataset.url="";
+    box.classList.remove("show");
+    box.textContent="";
+  },60000);
+}
 
+async function salvarHtmlGerado(pacote, compartilhar){
+  const blob=new Blob([pacote.html],{type:"text/html;charset=utf-8"});
+  if(compartilhar && window.File && navigator.canShare && navigator.share){
+    const file=new File([blob],pacote.nomeArquivo,{type:"text/html"});
+    if(navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:"MAE-DINA",text:"Arquivo HTML MAE-DINA salvo para revisao."});
+      return;
+    }
+  }
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=pacote.nomeArquivo;
+  a.rel="noopener";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  mostrarFallbackDownload(url,pacote.nomeArquivo);
+}
+
+async function exportHtmlSalvo(){
+  const btn=$("htmlBtn");
+  if(btn){btn.disabled=true;btn.textContent="Gravando HTML...";}
+  try{
+    await salvarHtmlGerado(montarHtmlSalvo(), false);
+  }catch(e){alert("Erro ao exportar HTML salvo.");console.error(e);}
+  finally{if(btn){btn.disabled=false;btn.textContent="Salvar HTML editável";}}
+}
+
+async function compartilharHtmlSalvo(){
+  const btn=$("shareHtmlBtn");
+  if(btn){btn.disabled=true;btn.textContent="Preparando HTML...";}
+  try{
+    await salvarHtmlGerado(montarHtmlSalvo(), true);
+  }catch(e){
+    if(e && e.name==="AbortError") return;
+    alert("Nao foi possivel compartilhar. O HTML foi preparado para download.");
+    console.error(e);
+  }finally{if(btn){btn.disabled=false;btn.textContent="Compartilhar HTML editável";}}
+}
 function dadosCompartilhamento(){
   calc();
   const agora = new Date();
@@ -1572,6 +1698,7 @@ if($("modalidadeInteresse")) $("modalidadeInteresse").addEventListener("change",
 $("dataAbertura").addEventListener("change",calc);
 $("dlBtn").addEventListener("click",download);
 if($("htmlBtn")) $("htmlBtn").addEventListener("click",exportHtmlSalvo);
+if($("shareHtmlBtn")) $("shareHtmlBtn").addEventListener("click",compartilharHtmlSalvo);
 
 if($("dataAbertura") && !$("dataAbertura").value){
   $("dataAbertura").value = isoLocalDate(new Date());
