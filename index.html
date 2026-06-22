@@ -255,14 +255,14 @@ input:focus,select:focus{border-color:rgba(37,215,243,.65);box-shadow:0 0 0 2px 
   font-variant-numeric:tabular-nums;background:rgba(8,22,42,.75);
 }
 .excel-resumo td{
-  padding:11px 14px;border-bottom:1px solid rgba(4,16,30,.45);
-  font-size:14px;font-weight:950;color:#04101e;text-align:right;
+  padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:14px;font-weight:950;color:#f0f7ff;text-align:right;
 }
 .excel-resumo tr:last-child td{border-bottom:0;}
 .excel-resumo td:first-child{text-align:left;letter-spacing:.1px;}
-.excel-resumo .row-avaliacao td{background:#d9d9d9;}
-.excel-resumo .row-showroom td{background:#d9ead3;}
-.excel-resumo .row-repasse td{background:#ffff00;}
+.excel-resumo .row-avaliacao td{background:linear-gradient(90deg,rgba(148,163,184,.18),rgba(148,163,184,.10));}
+.excel-resumo .row-showroom td{background:linear-gradient(90deg,rgba(34,197,94,.18),rgba(34,197,94,.09));}
+.excel-resumo .row-repasse td{background:linear-gradient(90deg,rgba(255,215,0,.20),rgba(245,158,11,.10));}
 .excel-resumo .resumo-pct{width:86px;}
 .cmp th:nth-child(3),.cmp td:nth-child(3){
   background:rgba(217,234,211,.14);
@@ -949,7 +949,7 @@ body.light-view .class-box.active{
     <!-- BOTÕES DOWNLOAD -->
     <button type="button" class="btn gestor-only" id="dlBtn">Baixar imagem PNG</button>
     <button type="button" class="btn secondary" id="htmlBtn">Salvar HTML editável</button>
-    <button type="button" class="btn secondary" id="shareHtmlBtn">Compartilhar HTML editável</button>
+    <button type="button" class="btn secondary" id="shareHtmlBtn">Enviar HTML editável</button>
     <div class="save-fallback" id="saveFallback" aria-live="polite"></div>
 
   </div>
@@ -1078,7 +1078,10 @@ const PARAMS = Object.freeze({
   kitRafaelPct: 0.05,
   taxaJurosAM: 0.015,
   kitShowroomShare: 0.20,
-  kitRepasseShare: 0.16
+  kitRepasseShare: 0.16,
+  valorMinimo: 1000,
+  valorMaximo: 999999,
+  camposValorZeroOk: ["reparo"]
 });
 
 /*
@@ -1556,7 +1559,7 @@ async function salvarHtmlGerado(pacote, compartilhar){
   if(compartilhar && window.File && navigator.canShare && navigator.share){
     const file=new File([blob],pacote.nomeArquivo,{type:"text/html"});
     if(navigator.canShare({files:[file]})){
-      await navigator.share({files:[file],title:"MAE-DINA",text:"Arquivo HTML MAE-DINA salvo para revisao."});
+      await Promise.race([navigator.share({files:[file],title:"MAE-DINA",text:"Arquivo HTML MAE-DINA salvo para revisao."}), new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo esgotado ao abrir o envio.")),8000))]);
       return;
     }
   }
@@ -1582,14 +1585,14 @@ async function exportHtmlSalvo(){
 
 async function compartilharHtmlSalvo(){
   const btn=$("shareHtmlBtn");
-  if(btn){btn.disabled=true;btn.textContent="Preparando HTML...";}
+  if(btn){btn.disabled=true;btn.textContent="Abrindo envio...";}
   try{
     await salvarHtmlGerado(montarHtmlSalvo(), true);
   }catch(e){
     if(e && e.name==="AbortError") return;
     alert("Nao foi possivel compartilhar. O HTML foi preparado para download.");
     console.error(e);
-  }finally{if(btn){btn.disabled=false;btn.textContent="Compartilhar HTML editável";}}
+  }finally{if(btn){btn.disabled=false;btn.textContent="Enviar HTML editável";}}
 }
 function dadosCompartilhamento(){
   calc();
@@ -1637,10 +1640,27 @@ function dadosCompartilhamento(){
 // ── FORMATAÇÃO DE CAMPOS NUMÉRICOS (milhar enquanto digita) ──
 function bindMoeda(id){
   const el=$(id); if(!el) return;
+  const min=PARAMS.valorMinimo;
+  const max=PARAMS.valorMaximo;
+  const aceitaZero=PARAMS.camposValorZeroOk.includes(id);
+  function formatar(){
+    const raw=el.value.replace(/\D/g,"");
+    if(!raw){el.value="";return null;}
+    const valor=Math.min(Number(raw),max);
+    el.value=valor.toLocaleString("pt-BR");
+    return valor;
+  }
   el.addEventListener("input",function(){
-    const raw = this.value.replace(/\D/g,"");
-    if(raw) this.value = Number(raw).toLocaleString("pt-BR");
-    else this.value = "";
+    const valor=formatar();
+    if(valor===null || valor>=min || (aceitaZero && valor===0)) calc();
+  });
+  el.addEventListener("blur",function(){
+    const valor=formatar();
+    if(valor===null){calc();return;}
+    if(valor<min && !(aceitaZero && valor===0)){
+      alert(`Valor mínimo permitido: R$ ${min.toLocaleString("pt-BR")}.`);
+      el.value="";
+    }
     calc();
   });
 }
