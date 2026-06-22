@@ -808,6 +808,22 @@ body.light-view .class-box.active{
 @media (max-width:520px){
   .portal-panel{padding:8px;}
 }
+/* ACOES APOS ANALISE */
+.actions-title{margin-top:10px;}
+.actions-panel{
+  border:1px solid rgba(255,255,255,.09);border-radius:10px;
+  background:rgba(8,22,42,.48);padding:10px;display:grid;gap:9px;
+}
+.actions-panel .action-png{max-width:320px;justify-self:start;margin:0;}
+.actions-panel .portal-panel{margin-top:0;}
+@media (min-width:980px){
+  .actions-panel .portal-row.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .actions-panel .portal-actions{gap:8px;}
+}
+@media (max-width:960px){
+  .actions-panel{padding:9px;}
+  .actions-panel .action-png{max-width:none;width:100%;}
+}
 </style>
 </head>
 <body>
@@ -992,41 +1008,7 @@ body.light-view .class-box.active{
     <input id="mediaShowroom" type="hidden" value="">
     <input id="mediaRepasse" type="hidden" value="">
     <input id="kitRafael" type="hidden" value="">
-    <input id="taxaJuros" type="hidden" value="">
-
-    <!-- BOTÕES DOWNLOAD -->
-    <button type="button" class="btn gestor-only" id="dlBtn">Baixar imagem PNG</button>
-    <div class="save-fallback" id="saveFallback" aria-live="polite"></div>
-    <div class="portal-panel" id="portalPanel">
-      <div class="portal-head">
-        <div class="portal-title">Portal online</div>
-        <div class="portal-chip" id="portalChip">desconectado</div>
-      </div>
-      <div class="portal-row" id="portalLogin">
-        <input id="portalEmail" type="email" autocomplete="username" placeholder="E-mail do usu&aacute;rio">
-        <input id="portalSenha" type="password" autocomplete="current-password" placeholder="Senha">
-        <button type="button" class="portal-btn" id="portalLoginBtn">Entrar no portal</button>
-      </div>
-      <div class="portal-actions" id="portalActions">
-        <div class="portal-user" id="portalUser"></div>
-        <div class="portal-row two">
-          <button type="button" class="portal-btn" id="portalSaveBtn">Salvar avalia&ccedil;&atilde;o online</button>
-          <button type="button" class="portal-btn" id="portalCopyBtn">Copiar link da avalia&ccedil;&atilde;o</button>
-        </div>
-        <div class="portal-row two">
-          <button type="button" class="portal-btn subtle" id="portalListBtn">Ver avalia&ccedil;&otilde;es salvas</button>
-          <button type="button" class="portal-btn xls" id="portalXlsBtn">Exportar XLS</button>
-        </div>
-        <div class="portal-row">
-          <button type="button" class="portal-btn subtle" id="portalLogoutBtn">Sair do portal</button>
-        </div>
-        <div class="portal-link" id="portalLink"></div>
-        <div class="portal-list" id="portalList"></div>
-      </div>
-      <div class="portal-status" id="portalStatus" aria-live="polite"></div>
-    </div>
-
-  </div>
+    <input id="taxaJuros" type="hidden" value=""></div>
   <!-- DIREITO -->
   <div class="right">
 
@@ -1087,6 +1069,40 @@ body.light-view .class-box.active{
         <tr class="r-show"><td>+90 dias</td><td id="d-90">—</td><td id="ms-90">—</td><td id="mr-90">—</td></tr>
       </tbody>
     </table>
+
+    <div class="sec-title actions-title">A&ccedil;&otilde;es e Hist&oacute;rico</div>
+    <div class="actions-panel">
+      <button type="button" class="btn gestor-only action-png" id="dlBtn">Baixar imagem PNG</button>
+      <div class="save-fallback" id="saveFallback" aria-live="polite"></div>
+      <div class="portal-panel" id="portalPanel">
+      <div class="portal-head">
+        <div class="portal-title">Portal online</div>
+        <div class="portal-chip" id="portalChip">desconectado</div>
+      </div>
+      <div class="portal-row" id="portalLogin">
+        <input id="portalEmail" type="email" autocomplete="username" placeholder="E-mail do usu&aacute;rio">
+        <input id="portalSenha" type="password" autocomplete="current-password" placeholder="Senha">
+        <button type="button" class="portal-btn" id="portalLoginBtn">Entrar no portal</button>
+      </div>
+      <div class="portal-actions" id="portalActions">
+        <div class="portal-user" id="portalUser"></div>
+        <div class="portal-row two">
+          <button type="button" class="portal-btn" id="portalSaveBtn">Salvar avalia&ccedil;&atilde;o online</button>
+          <button type="button" class="portal-btn" id="portalCopyBtn">Copiar link da avalia&ccedil;&atilde;o</button>
+        </div>
+        <div class="portal-row two">
+          <button type="button" class="portal-btn subtle" id="portalListBtn">Ver avalia&ccedil;&otilde;es salvas</button>
+          <button type="button" class="portal-btn xls" id="portalXlsBtn">Exportar XLS</button>
+        </div>
+        <div class="portal-row">
+          <button type="button" class="portal-btn subtle" id="portalLogoutBtn">Sair do portal</button>
+        </div>
+        <div class="portal-link" id="portalLink"></div>
+        <div class="portal-list" id="portalList"></div>
+      </div>
+      <div class="portal-status" id="portalStatus" aria-live="polite"></div>
+    </div>
+    </div>
 
     <div class="credito" id="creditoLeft">Elaborado por Edson Jaques</div>
 
