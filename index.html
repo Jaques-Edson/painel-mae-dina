@@ -1094,7 +1094,8 @@ body.light-view .class-box.active{
           <button type="button" class="portal-btn subtle" id="portalListBtn">Ver avalia&ccedil;&otilde;es salvas</button>
           <button type="button" class="portal-btn xls" id="portalXlsBtn">Exportar XLS</button>
         </div>
-        <div class="portal-row">
+        <div class="portal-row two">
+          <button type="button" class="portal-btn subtle" id="portalNewBtn">Nova avalia&ccedil;&atilde;o / limpar</button>
           <button type="button" class="portal-btn subtle" id="portalLogoutBtn">Sair do portal</button>
         </div>
         <div class="portal-link" id="portalLink"></div>
@@ -2195,6 +2196,27 @@ if($("dataAbertura") && !$("dataAbertura").value){
     atualizarUi();
     setStatus("Avaliacao carregada: " + row.codigo, "ok");
   }
+  function novaAvaliacao(){
+    avaliacaoAtual = null;
+    codigoPendente = "";
+    try{ localStorage.removeItem(AVALIACAO_KEY); }catch(e){}
+    CAMPOS_PORTAL.forEach(id => {
+      const el = byId(id);
+      if(!el) return;
+      el.value = id === "dataAbertura" ? isoLocalDate(new Date()) : "";
+    });
+    document.querySelectorAll('input[name="perfil"], input[name="classificacao"]').forEach(input => { input.checked = false; });
+    document.querySelectorAll('#perfilRow .radio-pill, #classRow .class-box').forEach(el => el.classList.remove("active"));
+    const lista = byId("portalList");
+    if(lista){ lista.innerHTML = ""; lista.style.display = "none"; }
+    portalAvaliacoesLista = [];
+    if(history && history.replaceState){
+      try{ history.replaceState(null, "", location.pathname || PUBLIC_APP_URL); }catch(e){}
+    }
+    if(typeof calc === "function") calc();
+    atualizarUi();
+    setStatus("Campos limpos. Pronto para iniciar uma nova avaliacao.", "ok");
+  }
   async function salvarPortal(){
     if(!portalSession || !portalSession.user){ setStatus("Entre no portal antes de salvar.", "bad"); return; }
     const btn = byId("portalSaveBtn");
@@ -2291,6 +2313,7 @@ if($("dataAbertura") && !$("dataAbertura").value){
     byId("portalSaveBtn")?.addEventListener("click", salvarPortal);
     byId("portalCopyBtn")?.addEventListener("click", copiarLink);
     byId("portalListBtn")?.addEventListener("click", listarAvaliacoes);
+    byId("portalNewBtn")?.addEventListener("click", novaAvaliacao);
     byId("portalXlsBtn")?.addEventListener("click", exportarAvaliacoesXls);
     byId("portalLogoutBtn")?.addEventListener("click", sairPortal);
     atualizarUi();
