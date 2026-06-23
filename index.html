@@ -1908,6 +1908,7 @@ if($("dataAbertura") && !$("dataAbertura").value){
 // -- PORTAL ONLINE SUPABASE: login, salvar, carregar link e historico --
 (function(){
   const SUPABASE_URL = "https://dtcdcdjoyesxhjquljyq.supabase.co";
+  const PUBLIC_APP_URL = "https://jaques-edson.github.io/painel-mae-dina/";
   const SUPABASE_KEY = "sb_publishable_vZOGEU-jtEj-lWBwI_Owtg_GcEO9TNn";
   const SESSION_KEY = "maedina-supabase-session";
   const AVALIACAO_KEY = "maedina-avaliacao-atual";
@@ -1993,7 +1994,9 @@ if($("dataAbertura") && !$("dataAbertura").value){
   function linkAtual(){
     const codigo = avaliacaoAtual && avaliacaoAtual.codigo ? avaliacaoAtual.codigo : "";
     if(!codigo) return "";
-    return location.origin + location.pathname + "?avaliacao=" + encodeURIComponent(codigo);
+    const baseAtual = location.protocol === "http:" || location.protocol === "https:" ? (location.origin + location.pathname) : PUBLIC_APP_URL;
+    const base = (baseAtual || PUBLIC_APP_URL).split("?")[0].replace(/\/+$/, "") + "/";
+    return base + "?avaliacao=" + encodeURIComponent(codigo);
   }
   function getRadio(name){
     const el = document.querySelector('input[name="' + name + '"]:checked');
@@ -2310,12 +2313,6 @@ if($("dataAbertura") && !$("dataAbertura").value){
   else iniciarPortal();
 })();
 
-// Alerta inicial para orientar abertura em navegadores moveis, especialmente iOS.
-(function(){
-  setTimeout(function(){
-    alert("Para usar todas as funcoes, abra este arquivo no navegador Safari/Chrome. No iPhone, se recebeu por WhatsApp, Mail ou Arquivos, use Compartilhar > Abrir no Safari antes de editar ou salvar.");
-  }, 500);
-})();
 calc();
 </script>
 </body>
